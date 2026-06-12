@@ -1072,9 +1072,9 @@ body {
 .lb-figure img {
   display: block;
   max-width: 100%;
-  /* Κρατάμε ~220px για την ετικέτα ώστε να ΜΗΝ κόβεται ποτέ κάτω */
+  /* Κρατάμε ~260px για την ετικέτα ώστε να ΜΗΝ κόβεται ποτέ κάτω */
   max-height: 80vh;
-  max-height: min(80vh, calc(100dvh - 220px));
+  max-height: min(80vh, calc(100dvh - 260px));
   object-fit: contain;
   border: 1px solid rgba(196, 173, 133, 0.3);
   box-shadow: 0 40px 90px -24px rgba(0, 0, 0, 0.85);
