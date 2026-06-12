@@ -10,43 +10,37 @@
   --font-prose: "EB Garamond", Georgia, serif;
   --font-ui: "Commissioner", "Segoe UI", sans-serif;
 
-  /* Light: champagne προς λιλά */
-  --bg-a: #f7f1e8;
-  --bg-b: #f0e4e4;
-  --bg-c: #e4d4ec;
-  --mesh-1: rgba(214, 187, 230, 0.55);
-  --mesh-2: rgba(238, 215, 196, 0.6);
-  --mesh-3: rgba(196, 173, 224, 0.4);
-  --ink: #2c2330;
-  --ink-soft: #66596f;
-  --accent: #6d4f8c;
-  --gold: #94774a;
-  --card: rgba(255, 252, 247, 0.65);
-  --line: rgba(74, 58, 84, 0.28);
-  --line-soft: rgba(74, 58, 84, 0.14);
-  --shadow: 0 30px 60px -25px rgba(58, 42, 70, 0.35);
-  --header-bg: rgba(247, 241, 232, 0.82);
-  --dialog-bg: #f6efe7;
+  /* Light: ιβουάρ couture (Monique Lhuillier παλέτα) */
+  --bg-a: #faf8f4;
+  --bg-b: #faf8f4;
+  --bg-c: #f4f1ea;
+  --ink: #1d1b18;
+  --ink-soft: #7d766c;
+  --accent: #8a7350;
+  --gold: #9a8154;
+  --card: #ffffff;
+  --line: rgba(29, 27, 24, 0.35);
+  --line-soft: rgba(29, 27, 24, 0.12);
+  --shadow: 0 24px 60px -34px rgba(29, 27, 24, 0.35);
+  --header-bg: rgba(250, 248, 244, 0.92);
+  --dialog-bg: #faf8f4;
 }
 
 [data-theme="dark"] {
-  /* Dusk: βαθύ μελιτζανί, λιλά τόνοι */
-  --bg-a: #1c1521;
-  --bg-b: #231a2b;
-  --bg-c: #2e2238;
-  --mesh-1: rgba(122, 88, 158, 0.32);
-  --mesh-2: rgba(158, 116, 96, 0.22);
-  --mesh-3: rgba(94, 70, 134, 0.3);
-  --ink: #f1eae1;
-  --ink-soft: #b6a8c2;
-  --accent: #c9aae6;
-  --gold: #d3b88a;
-  --card: rgba(40, 31, 50, 0.6);
-  --line: rgba(222, 204, 238, 0.3);
-  --line-soft: rgba(222, 204, 238, 0.14);
-  --shadow: 0 30px 60px -25px rgba(0, 0, 0, 0.65);
-  --header-bg: rgba(28, 21, 33, 0.82);
-  --dialog-bg: #241b2d;
+  /* Dark: μαύρο couture (Galia Lahav παλέτα) */
+  --bg-a: #0e0d0c;
+  --bg-b: #0e0d0c;
+  --bg-c: #141312;
+  --ink: #f1eee7;
+  --ink-soft: #9d968a;
+  --accent: #c4ad85;
+  --gold: #c4ad85;
+  --card: #161514;
+  --line: rgba(241, 238, 231, 0.35);
+  --line-soft: rgba(241, 238, 231, 0.14);
+  --shadow: 0 24px 60px -30px rgba(0, 0, 0, 0.8);
+  --header-bg: rgba(14, 13, 12, 0.92);
+  --dialog-bg: #131211;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -64,29 +58,11 @@ body {
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
-/* Το gradient σε δικό του fixed layer (GPU-composited),
-   αντί για background-attachment: fixed που λαγκάρει στο scroll */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -10;
-  background: linear-gradient(160deg, var(--bg-a) 0%, var(--bg-b) 45%, var(--bg-c) 100%);
-}
 
 ::selection { background: var(--accent); color: var(--bg-a); }
 
-/* ---------- Κόκκος ---------- */
-.grain {
-  position: fixed;
-  inset: -50%;
-  width: 200%;
-  height: 200%;
-  pointer-events: none;
-  z-index: 4;
-  opacity: 0.05;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-}
+/* ---------- Κόκκος: αφαιρέθηκε στο couture monochrome restyle ---------- */
+.grain { display: none; }
 
 /* ---------- Skip link ---------- */
 .skip-link {
@@ -123,10 +99,9 @@ body::before {
 }
 .site-header.scrolled {
   background: var(--header-bg);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  box-shadow: 0 1px 0 var(--line-soft), 0 2px 18px -8px rgba(58, 42, 70, 0.25);
-  border-bottom: 1px solid rgba(156, 124, 60, 0.25);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--line-soft);
 }
 
 .wordmark {
@@ -159,40 +134,37 @@ body::before {
 [data-theme="dark"] .icon-moon { display: block; }
 [data-theme="dark"] .icon-sun { display: none; }
 
-/* ---------- Κουμπιά ---------- */
+/* ---------- Κουμπιά: hairline ορθογώνια, couture ---------- */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.55rem;
   min-height: 48px;
-  padding: 0.4rem 1.5rem;
+  padding: 0.4rem 1.6rem;
   border: 1px solid var(--ink);
-  border-radius: 999px;
+  border-radius: 0;
   background: transparent;
   color: var(--ink);
   font-family: var(--font-ui);
-  font-size: 0.85rem;
-  font-weight: 500;
-  letter-spacing: 0.14em;
+  font-size: 0.8rem;
+  font-weight: 400;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
   text-decoration: none;
   cursor: pointer;
-  transition: background 0.25s, color 0.25s, border-color 0.25s, transform 0.25s;
+  transition: background 0.3s, color 0.3s, border-color 0.3s;
 }
 .btn:hover {
   background: var(--ink);
   color: var(--bg-a);
-  transform: translateY(-2px);
-  box-shadow: 0 12px 24px -14px rgba(58, 42, 70, 0.55);
 }
 
 .btn-fill {
   background: var(--ink);
   color: var(--bg-a);
 }
-.btn-fill:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
-[data-theme="dark"] .btn-fill:hover { color: #1c1521; }
+.btn-fill:hover { background: transparent; color: var(--ink); }
 
 .btn-ghost { border-color: var(--line); }
 
@@ -207,41 +179,9 @@ body::before {
   padding: 6rem 1.5rem 3rem;
 }
 
-.hero-photo {
-  position: absolute;
-  inset: 0;
-  z-index: -2;
-  background: url("photos/005/05.jpg") center 35% / cover no-repeat;
-  opacity: 0.3;
-  filter: blur(4px) saturate(0.75);
-  transform: scale(1.06);
-}
-.hero-photo::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, var(--bg-a) 0%, transparent 35%, transparent 65%, var(--bg-c) 100%);
-  opacity: 0.85;
-}
-[data-theme="dark"] .hero-photo { opacity: 0.16; }
-
-.hero-mesh {
-  position: absolute;
-  inset: -30%;
-  z-index: -1;
-  background:
-    radial-gradient(42% 38% at 22% 28%, var(--mesh-1) 0%, transparent 70%),
-    radial-gradient(46% 42% at 78% 24%, var(--mesh-2) 0%, transparent 72%),
-    radial-gradient(50% 46% at 50% 82%, var(--mesh-3) 0%, transparent 70%);
-  animation: meshDrift 26s ease-in-out infinite alternate;
-  will-change: transform;
-}
-
-@keyframes meshDrift {
-  0%   { transform: translate3d(0, 0, 0) rotate(0deg) scale(1); }
-  50%  { transform: translate3d(2.5%, -2%, 0) rotate(2.5deg) scale(1.06); }
-  100% { transform: translate3d(-2%, 2.5%, 0) rotate(-2deg) scale(1.03); }
-}
+/* Couture monochrome: καθαρό φλατ hero, χωρίς blur/mesh layers */
+.hero-photo { display: none; }
+.hero-mesh { display: none; }
 
 .hero-inner { max-width: 60rem; }
 
@@ -288,17 +228,18 @@ body::before {
   margin: 0 auto;
 }
 
+/* Hairline ορθογώνιο, στυλ Galia Lahav "Book an appointment" */
 .hero-badge {
   display: inline-block;
   margin-top: 2.6rem;
-  padding: 0.55rem 1.4rem;
-  border: 1px solid var(--gold);
-  border-radius: 999px;
+  padding: 0.85rem 2rem;
+  border: 1px solid var(--ink);
   font-family: var(--font-ui);
-  font-size: 0.8rem;
-  letter-spacing: 0.3em;
+  font-weight: 400;
+  font-size: 0.78rem;
+  letter-spacing: 0.32em;
   text-transform: uppercase;
-  color: var(--gold);
+  color: var(--ink);
 }
 
 .scroll-cue {
@@ -389,60 +330,48 @@ body::before {
 
 .ch-photo { position: relative; z-index: 1; }
 
+/* Γυμνή editorial φωτογραφία, χωρίς πλαίσιο/πασπαρτού (Vera Wang) */
 .frame {
   position: relative;
   display: block;
   width: 100%;
-  border: 1px solid var(--line);
-  padding: clamp(12px, 1.6vw, 20px);
-  background: var(--card);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  box-shadow: var(--shadow);
+  border: none;
+  padding: 0;
+  background: var(--bg-c);
+  overflow: hidden;
   cursor: zoom-in;
   font: inherit;
   color: inherit;
   -webkit-tap-highlight-color: transparent;
-  transition: box-shadow 0.35s, transform 0.35s;
 }
-.frame:hover { box-shadow: 0 38px 70px -28px rgba(58, 42, 70, 0.5); }
 .frame:hover .zoom-hint { opacity: 1; transform: translateY(0); }
-/* Διπλό "πασπαρτού" couture πλαισίου */
-.frame::after {
-  content: "";
-  position: absolute;
-  inset: 6px;
-  border: 1px solid rgba(156, 124, 60, 0.35);
-  pointer-events: none;
-  z-index: 2;
-}
+.frame:hover img { transform: scale(1.025); }
 .frame img {
   display: block;
   width: 100%;
   aspect-ratio: 3 / 4;
   object-fit: cover;
   max-height: 80vh;
-  filter: saturate(0.97) contrast(1.03);
+  filter: saturate(0.96) contrast(1.02);
+  transition: transform 1.2s cubic-bezier(0.2, 0.6, 0.2, 1);
 }
 /* Ένδειξη "Μεγέθυνση" πάνω στη φωτογραφία */
 .zoom-hint {
   position: absolute;
-  left: clamp(18px, 2vw, 28px);
-  bottom: clamp(18px, 2vw, 28px);
+  left: 18px;
+  bottom: 18px;
   z-index: 3;
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
-  padding: 0.45rem 0.85rem;
-  background: rgba(28, 21, 33, 0.72);
-  color: #f4ecdf;
+  padding: 0.5rem 0.9rem;
+  background: rgba(14, 13, 12, 0.7);
+  color: #f1eee7;
   font-family: var(--font-ui);
-  font-size: 0.78rem;
-  letter-spacing: 0.12em;
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  border-radius: 999px;
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
   opacity: 0;
   transform: translateY(8px);
   transition: opacity 0.35s, transform 0.35s;
@@ -459,14 +388,14 @@ body::before {
   margin-top: 0.9rem;
 }
 .thumb {
-  width: 64px;
-  height: 84px;
+  width: 60px;
+  height: 80px;
   padding: 0;
-  border: 1px solid var(--line-soft);
-  background: var(--card);
+  border: 1px solid transparent;
+  background: var(--bg-c);
   cursor: pointer;
-  opacity: 0.65;
-  transition: opacity 0.25s, border-color 0.25s, transform 0.25s;
+  opacity: 0.55;
+  transition: opacity 0.25s, border-color 0.25s;
 }
 .thumb img {
   display: block;
@@ -474,11 +403,10 @@ body::before {
   height: 100%;
   object-fit: cover;
 }
-.thumb:hover { opacity: 1; transform: translateY(-2px); }
+.thumb:hover { opacity: 1; }
 .thumb.active {
   opacity: 1;
-  border-color: var(--accent);
-  outline: 1px solid var(--accent);
+  border-color: var(--ink);
 }
 
 .ch-info { position: relative; z-index: 1; max-width: 34rem; }
@@ -486,12 +414,12 @@ body::before {
 .ch-code {
   position: relative;
   font-family: var(--font-ui);
-  font-size: 0.85rem;
-  font-weight: 600;
-  letter-spacing: 0.32em;
+  font-size: 0.78rem;
+  font-weight: 400;
+  letter-spacing: 0.34em;
   text-transform: uppercase;
-  color: var(--gold);
-  margin-bottom: 1.1rem;
+  color: var(--ink-soft);
+  margin-bottom: 1.3rem;
   padding-left: 60px;
 }
 /* Χρυσή γραμμή που "τραβιέται" πριν τον κωδικό */
@@ -521,35 +449,36 @@ body::before {
 .ch-title {
   font-family: var(--font-display);
   font-weight: 400;
-  font-size: clamp(2rem, 3.8vw, 3.1rem);
-  line-height: 1.12;
-  margin-bottom: 1.4rem;
+  font-size: clamp(2.2rem, 4.4vw, 3.7rem);
+  line-height: 1.08;
+  letter-spacing: 0.005em;
+  margin-bottom: 1.6rem;
 }
 
 .ch-blurb {
-  font-size: 1.12rem;
-  line-height: 1.8;
+  font-size: 1.15rem;
+  line-height: 1.85;
   color: var(--ink-soft);
-  margin-bottom: 1.8rem;
+  margin-bottom: 2.2rem;
 }
 
 .ch-specs {
   display: grid;
   grid-template-columns: max-content 1fr;
-  gap: 0.45rem 1.4rem;
-  margin-bottom: 1.9rem;
-  border-left: 2px solid var(--line-soft);
-  padding-left: 1.3rem;
+  gap: 0.7rem 2rem;
+  margin-bottom: 2.2rem;
+  padding-top: 1.4rem;
+  border-top: 1px solid var(--line-soft);
 }
 .ch-specs dt {
   font-family: var(--font-ui);
-  font-size: 0.78rem;
-  font-weight: 600;
-  letter-spacing: 0.16em;
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--ink-soft);
   align-self: baseline;
-  padding-top: 0.18rem;
+  padding-top: 0.25rem;
 }
 .ch-specs dd { font-size: 1.05rem; }
 
@@ -567,14 +496,11 @@ body::before {
 }
 .ch-price.ch-price-tbd {
   font-family: var(--font-ui);
-  font-size: 0.92rem;
-  font-weight: 600;
-  letter-spacing: 0.24em;
+  font-size: 0.85rem;
+  font-weight: 400;
+  letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: var(--gold);
-  border: 1px solid var(--gold);
-  border-radius: 999px;
-  padding: 0.5rem 1.3rem;
+  color: var(--accent);
 }
 .ch-price-label {
   font-family: var(--font-ui);
@@ -595,21 +521,10 @@ body::before {
 /* ---------- Outro ---------- */
 .outro {
   position: relative;
-  overflow: hidden;
-  padding: clamp(5rem, 14vh, 9rem) clamp(1.5rem, 6vw, 4rem);
+  padding: clamp(6rem, 16vh, 11rem) clamp(1.5rem, 6vw, 4rem);
   text-align: center;
+  border-top: 1px solid var(--line-soft);
 }
-.outro::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background: url("photos/016/01.jpg") center 22% / cover no-repeat;
-  opacity: 0.13;
-  filter: blur(5px) saturate(0.8);
-  transform: scale(1.05);
-}
-[data-theme="dark"] .outro::before { opacity: 0.09; }
 .outro-inner { max-width: 46rem; margin: 0 auto; }
 .outro-title {
   font-family: var(--font-display);
@@ -666,7 +581,7 @@ body::before {
   overflow-y: auto;
 }
 .index-dialog::backdrop {
-  background: rgba(20, 14, 26, 0.55);
+  background: rgba(14, 13, 12, 0.65);
   backdrop-filter: blur(6px);
 }
 
@@ -706,30 +621,27 @@ body::before {
   display: block;
   text-decoration: none;
   color: var(--ink);
-  border: 1px solid var(--line-soft);
-  background: var(--card);
-  padding: 0.7rem;
-  transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+  border: none;
+  background: transparent;
+  padding: 0;
+  transition: opacity 0.25s;
 }
-.index-card:hover {
-  transform: translateY(-4px);
-  border-color: var(--accent);
-  box-shadow: var(--shadow);
-}
+.index-card:hover { opacity: 0.7; }
 .index-card img {
   display: block;
   width: 100%;
   aspect-ratio: 3 / 4;
   object-fit: cover;
   margin-bottom: 0.7rem;
+  background: var(--bg-c);
 }
 .index-card-code {
   font-family: var(--font-ui);
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.22em;
+  font-size: 0.68rem;
+  font-weight: 400;
+  letter-spacing: 0.24em;
   text-transform: uppercase;
-  color: var(--gold);
+  color: var(--ink-soft);
 }
 .index-card-title {
   font-family: var(--font-prose);
@@ -826,41 +738,39 @@ body::before {
   display: inline-flex;
   align-items: center;
   gap: 0.6rem;
-  min-height: 56px;
-  padding: 0.5rem 1.4rem;
-  border: 1px solid rgba(156, 124, 60, 0.6);
-  border-radius: 999px;
+  min-height: 54px;
+  padding: 0.5rem 1.5rem;
+  border: 1px solid var(--ink);
+  border-radius: 0;
   background: var(--ink);
   color: var(--bg-a);
   font-family: var(--font-ui);
-  font-size: 0.95rem;
-  font-weight: 500;
-  letter-spacing: 0.1em;
+  font-size: 0.82rem;
+  font-weight: 400;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   cursor: pointer;
-  box-shadow: 0 18px 36px -16px rgba(30, 20, 40, 0.6);
-  transition: transform 0.25s, box-shadow 0.25s, background 0.25s;
+  box-shadow: var(--shadow);
+  transition: background 0.3s, color 0.3s;
 }
-.likes-fab:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 24px 44px -18px rgba(30, 20, 40, 0.7);
-}
-[data-theme="dark"] .likes-fab { background: var(--accent); color: #1c1521; }
+.likes-fab:hover { background: transparent; color: var(--ink); }
+[data-theme="dark"] .likes-fab { background: var(--ink); color: var(--bg-a); }
+[data-theme="dark"] .likes-fab:hover { background: transparent; color: var(--ink); }
 .likes-count {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 1.7rem;
-  height: 1.7rem;
+  min-width: 1.6rem;
+  height: 1.6rem;
   padding: 0 0.35rem;
-  border-radius: 999px;
+  border-radius: 0;
   background: var(--gold);
   color: #fff;
-  font-size: 0.9rem;
-  font-weight: 600;
+  font-size: 0.85rem;
+  font-weight: 500;
   letter-spacing: 0;
 }
-[data-theme="dark"] .likes-count { color: #1c1521; }
+.likes-fab:hover .likes-count { background: var(--gold); color: #fff; }
 .likes-fab.has-items .likes-count { animation: countPop 0.4s cubic-bezier(0.2, 0.6, 0.2, 1); }
 @keyframes countPop {
   0% { transform: scale(1); }
@@ -982,9 +892,9 @@ body::before {
   font-size: 1rem;
   line-height: 1.5;
   padding: 0.9rem 1.4rem;
-  border-radius: 10px;
-  border: 1px solid rgba(156, 124, 60, 0.5);
-  box-shadow: 0 18px 36px -14px rgba(20, 12, 28, 0.6);
+  border-radius: 0;
+  border: 1px solid var(--ink-soft);
+  box-shadow: var(--shadow);
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.35s, transform 0.35s;
