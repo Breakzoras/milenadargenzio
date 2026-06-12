@@ -314,6 +314,55 @@ body {
 }
 .b2b-band strong { font-weight: 600; color: var(--ink); }
 
+/* ---------- Cinematic parallax interlude ---------- */
+.interlude {
+  position: relative;
+  height: clamp(58vh, 78vh, 90vh);
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  text-align: center;
+}
+/* Η εικόνα είναι ψηλότερη από το band ώστε να "ταξιδεύει" με parallax
+   χωρίς να αποκαλύπτει κενά. Μόνο transform (GPU) -> λείο. */
+.interlude-bg {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -18%;
+  height: 136%;
+  background: var(--bg-c) url("photos/01/01.jpg") center 18% / cover no-repeat;
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+}
+.interlude-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(14,13,12,0.55) 0%, rgba(14,13,12,0.35) 45%, rgba(14,13,12,0.65) 100%);
+}
+.interlude-inner {
+  position: relative;
+  z-index: 1;
+  color: #f6f1e9;
+  padding: 0 1.5rem;
+}
+.interlude-overline {
+  font-family: var(--font-ui);
+  font-size: 0.8rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: #d9c9a8;
+  margin-bottom: 1.4rem;
+}
+.interlude-title {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(2rem, 5vw, 3.6rem);
+  line-height: 1.18;
+  text-shadow: 0 2px 30px rgba(0, 0, 0, 0.4);
+}
+
 /* ---------- Chapters ---------- */
 .chapter {
   position: relative;
@@ -1138,6 +1187,9 @@ body {
   .chapter:nth-child(even) .ch-info { order: 1; }
   .ch-info { max-width: none; }
   .frame img { max-height: 70vh; }
+  /* Στο κινητό/tablet: χωρίς parallax (στατική εικόνα, μηδέν jank) */
+  .interlude-bg { top: 0; height: 100%; transform: none !important; }
+  .interlude { height: clamp(48vh, 60vh, 70vh); }
 }
 
 /* Κινητό */
@@ -1241,4 +1293,5 @@ body {
     transition: none !important;
   }
   .reveal-code::before { transform: scaleX(1) !important; }
+  .interlude-bg { top: 0; height: 100%; transform: none !important; }
 }

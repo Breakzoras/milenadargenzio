@@ -659,6 +659,39 @@
   window.addEventListener("hashchange", () => setTimeout(onRevealScroll, 500));
   runReveal(); // αρχικό πέρασμα για ό,τι είναι ήδη ορατό
 
+  /* ---------- Cinematic parallax (interlude) ----------
+     Η εικόνα κινείται πιο αργά από το scroll -> βάθος. Μόνο transform
+     (GPU), rAF-throttled. Ανενεργό σε κινητά + reduced-motion (εκεί
+     μένει στατική) για να μην υπάρχει jank. */
+  const interludeBg = document.getElementById("interludeBg");
+  if (
+    interludeBg &&
+    !reducedMotion &&
+    window.matchMedia("(min-width: 901px)").matches
+  ) {
+    const band = interludeBg.parentElement;
+    let pTick = false;
+    function parallax() {
+      pTick = false;
+      const rect = band.getBoundingClientRect();
+      const vh = window.innerHeight;
+      if (rect.bottom < -50 || rect.top > vh + 50) return;
+      const center = rect.top + rect.height / 2;
+      const rel = (center - vh / 2) / (vh / 2 + rect.height / 2); // ~ -1..1
+      const y = -rel * rect.height * 0.14; // μένει μέσα στο 18% overflow
+      interludeBg.style.transform = `translate3d(0, ${y.toFixed(1)}px, 0)`;
+    }
+    const onParallax = () => {
+      if (!pTick) {
+        pTick = true;
+        requestAnimationFrame(parallax);
+      }
+    };
+    window.addEventListener("scroll", onParallax, { passive: true });
+    window.addEventListener("resize", onParallax, { passive: true });
+    parallax();
+  }
+
   /* ============================================================
      ΔΙΑΧΕΙΡΙΣΗ / SELF-PUBLISH EDITOR
      PIN/PUK + τα μυστικά ζουν ΜΟΝΟ server-side (Netlify Function).
