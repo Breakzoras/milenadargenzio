@@ -1,0 +1,9 @@
+# Milena D'Argenzio - Netlify config
+# Στατικό site (χωρίς build) + 1 serverless function για το self-publish editor.
+
+[build]
+  publish = "."
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"

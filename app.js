@@ -1,9 +1,9 @@
 /* ============================================================
    Milena D'Argenzio - Atelier Lookbook
-   Rendering + interactions. Δεδομένα από data.js (CONFIG, DRESSES).
+   Rendering + interactions. Δεδομένα από data.json (config, dresses).
    ============================================================ */
 
-(function () {
+(async function () {
   "use strict";
 
   /* ---------- Θέμα (dark/light) ---------- */
@@ -18,6 +18,20 @@
   });
 
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- Φόρτωση δεδομένων από data.json ---------- */
+  let CONFIG = {};
+  let DRESSES = [];
+  try {
+    const _data = await fetch("data.json", { cache: "no-store" }).then((r) => r.json());
+    CONFIG = _data.config || {};
+    DRESSES = _data.dresses || [];
+  } catch (e) {
+    console.error("Milena D'Argenzio: αποτυχία φόρτωσης data.json", e);
+    document.getElementById("catalog").innerHTML =
+      '<p style="text-align:center;padding:4rem 1rem;color:var(--ink-soft)">Προσωρινό πρόβλημα φόρτωσης. Δοκιμάστε ανανέωση.</p>';
+    return;
+  }
 
   /* ---------- Header state ---------- */
   const header = document.getElementById("siteHeader");
@@ -346,12 +360,18 @@
     title.className = "ch-title reveal";
     title.style.setProperty("--d", "0.08s");
     title.textContent = d.title;
+    title.dataset.edit = "title";
+    title.dataset.code = d.code;
+    title.dataset.label = "Τίτλος";
     info.appendChild(title);
 
     const blurb = document.createElement("p");
     blurb.className = "ch-blurb reveal";
     blurb.style.setProperty("--d", "0.18s");
     blurb.textContent = d.blurb;
+    blurb.dataset.edit = "blurb";
+    blurb.dataset.code = d.code;
+    blurb.dataset.label = "Περιγραφή";
     info.appendChild(blurb);
 
     if (d.details && Object.keys(d.details).length) {
@@ -363,6 +383,9 @@
         dt.textContent = k;
         const dd = document.createElement("dd");
         dd.textContent = v;
+        dd.dataset.edit = "details." + k;
+        dd.dataset.code = d.code;
+        dd.dataset.label = k;
         dl.appendChild(dt);
         dl.appendChild(dd);
       }
@@ -635,6 +658,216 @@
   window.addEventListener("load", () => setTimeout(onRevealScroll, 100));
   window.addEventListener("hashchange", () => setTimeout(onRevealScroll, 500));
   runReveal(); // αρχικό πέρασμα για ό,τι είναι ήδη ορατό
+
+  /* ============================================================
+     ΔΙΑΧΕΙΡΙΣΗ / SELF-PUBLISH EDITOR
+     PIN/PUK + τα μυστικά ζουν ΜΟΝΟ server-side (Netlify Function).
+     Ο client στέλνει ό,τι πληκτρολογεί, η function ελέγχει & κάνει
+     commit στο GitHub -> auto-deploy. 3 λάθος PIN -> κλείδωμα με PUK.
+     ============================================================ */
+  (function setupEditor() {
+    const PUBLISH_URL = "/.netlify/functions/publish";
+    const ATTEMPT_KEY = "md-pin-attempts";
+    let auth = null; // το σωστό PIN/PUK που κρατάμε στη μνήμη για τη συνεδρία
+    let editMode = false;
+
+    const getAttempts = () => parseInt(localStorage.getItem(ATTEMPT_KEY) || "0", 10);
+    const setAttempts = (n) => localStorage.setItem(ATTEMPT_KEY, String(n));
+
+    /* --- Trigger στο footer (διακριτικό) --- */
+    const footer = document.querySelector(".site-footer");
+    const trigger = document.createElement("button");
+    trigger.type = "button";
+    trigger.className = "admin-trigger";
+    trigger.textContent = "Διαχείριση";
+    if (footer) footer.appendChild(trigger);
+
+    /* --- PIN dialog --- */
+    const pinDlg = document.createElement("dialog");
+    pinDlg.className = "admin-dialog";
+    pinDlg.innerHTML =
+      '<h2 class="admin-title">Διαχείριση καταλόγου</h2>' +
+      '<p class="admin-text" id="pinMsg">Δώστε το PIN για επεξεργασία.</p>' +
+      '<input class="admin-input" id="pinInput" type="password" inputmode="numeric" autocomplete="off" aria-label="PIN">' +
+      '<div class="admin-actions"><button class="btn" id="pinCancel" type="button">Άκυρο</button>' +
+      '<button class="btn btn-fill" id="pinOk" type="button">Είσοδος</button></div>';
+    document.body.appendChild(pinDlg);
+    const pinInput = pinDlg.querySelector("#pinInput");
+    const pinMsg = pinDlg.querySelector("#pinMsg");
+
+    /* --- Edit dialog --- */
+    const editDlg = document.createElement("dialog");
+    editDlg.className = "admin-dialog edit-dialog";
+    editDlg.innerHTML =
+      '<h2 class="admin-title" id="editTitle">Επεξεργασία</h2>' +
+      '<textarea class="admin-textarea" id="editArea" rows="5"></textarea>' +
+      '<div class="admin-actions"><button class="btn" id="editCancel" type="button">Άκυρο</button>' +
+      '<button class="btn btn-fill" id="editSave" type="button">Αποθήκευση &amp; δημοσίευση</button></div>';
+    document.body.appendChild(editDlg);
+    const editArea = editDlg.querySelector("#editArea");
+    const editTitle = editDlg.querySelector("#editTitle");
+    let editTarget = null;
+
+    function refreshPinUI() {
+      const locked = getAttempts() >= 3;
+      pinMsg.textContent = locked
+        ? "Πολλές λάθος προσπάθειες. Δώστε τον κωδικό PUK για ξεκλείδωμα."
+        : "Δώστε το PIN για επεξεργασία.";
+      pinInput.setAttribute("aria-label", locked ? "PUK" : "PIN");
+      pinInput.placeholder = locked ? "PUK" : "PIN";
+      pinDlg.dataset.mode = locked ? "puk" : "pin";
+    }
+
+    trigger.addEventListener("click", () => {
+      if (editMode) { exitEdit(); return; }
+      pinInput.value = "";
+      refreshPinUI();
+      pinDlg.showModal();
+      setTimeout(() => pinInput.focus(), 50);
+    });
+
+    pinDlg.querySelector("#pinCancel").addEventListener("click", () => pinDlg.close());
+    pinDlg.querySelector("#pinOk").addEventListener("click", submitPin);
+    pinInput.addEventListener("keydown", (e) => { if (e.key === "Enter") submitPin(); });
+
+    async function submitPin() {
+      const value = pinInput.value.trim();
+      if (!value) return;
+      const mode = pinDlg.dataset.mode === "puk" ? "puk" : "pin";
+      pinDlg.querySelector("#pinOk").disabled = true;
+      try {
+        const res = await fetch(PUBLISH_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action: "verify", mode, value }),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (res.ok && data.ok) {
+          auth = value;
+          setAttempts(0);
+          pinDlg.close();
+          enterEdit();
+        } else if (res.status === 501) {
+          pinDlg.close();
+          toast("Η δημοσίευση δεν έχει ρυθμιστεί ακόμη (env vars στο Netlify).");
+        } else {
+          if (mode === "pin") {
+            const a = getAttempts() + 1;
+            setAttempts(a);
+            refreshPinUI();
+            pinMsg.textContent =
+              a >= 3
+                ? "Λάθος PIN. Κλειδώθηκε. Δώστε τον κωδικό PUK."
+                : `Λάθος PIN. Απομένουν ${3 - a} προσπάθειες.`;
+          } else {
+            pinMsg.textContent = "Λάθος PUK. Προσπαθήστε ξανά.";
+          }
+          pinInput.value = "";
+          pinInput.focus();
+        }
+      } catch (e) {
+        toast("Σφάλμα σύνδεσης. Δοκιμάστε ξανά.");
+      } finally {
+        pinDlg.querySelector("#pinOk").disabled = false;
+      }
+    }
+
+    function enterEdit() {
+      editMode = true;
+      document.body.classList.add("edit-mode");
+      trigger.textContent = "Έξοδος επεξεργασίας";
+      trigger.classList.add("active");
+      document.querySelectorAll("[data-edit]").forEach(addPencil);
+      toast("Λειτουργία επεξεργασίας ενεργή. Πατήστε το μολυβάκι δίπλα σε κάθε πεδίο.");
+    }
+
+    function exitEdit() {
+      editMode = false;
+      auth = null;
+      document.body.classList.remove("edit-mode");
+      trigger.textContent = "Διαχείριση";
+      trigger.classList.remove("active");
+      document.querySelectorAll(".edit-pencil").forEach((p) => p.remove());
+    }
+
+    function addPencil(el) {
+      if (el.querySelector(":scope > .edit-pencil")) return;
+      const pencil = document.createElement("button");
+      pencil.type = "button";
+      pencil.className = "edit-pencil";
+      pencil.setAttribute("aria-label", "Επεξεργασία πεδίου");
+      pencil.innerHTML =
+        '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>';
+      pencil.addEventListener("click", (e) => {
+        e.stopPropagation();
+        openEdit(el);
+      });
+      el.appendChild(pencil);
+    }
+
+    function currentText(el) {
+      // κείμενο χωρίς το μολυβάκι
+      const clone = el.cloneNode(true);
+      clone.querySelectorAll(".edit-pencil").forEach((p) => p.remove());
+      return clone.textContent.trim();
+    }
+
+    function openEdit(el) {
+      editTarget = el;
+      editTitle.textContent = "Επεξεργασία: " + (el.dataset.label || "πεδίο");
+      editArea.value = currentText(el);
+      editDlg.showModal();
+      setTimeout(() => editArea.focus(), 50);
+    }
+
+    editDlg.querySelector("#editCancel").addEventListener("click", () => editDlg.close());
+    editDlg.querySelector("#editSave").addEventListener("click", saveEdit);
+
+    async function saveEdit() {
+      if (!editTarget) return;
+      const value = editArea.value.trim();
+      const saveBtn = editDlg.querySelector("#editSave");
+      saveBtn.disabled = true;
+      saveBtn.textContent = "Δημοσίευση...";
+      try {
+        const res = await fetch(PUBLISH_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            action: "publish",
+            auth,
+            code: editTarget.dataset.code,
+            field: editTarget.dataset.edit,
+            value,
+          }),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (res.ok && data.ok) {
+          // Ενημέρωση DOM (κράτα το μολυβάκι)
+          const pencil = editTarget.querySelector(".edit-pencil");
+          editTarget.textContent = value;
+          if (pencil) editTarget.appendChild(pencil);
+          editDlg.close();
+          toast("Αποθηκεύτηκε. Θα εμφανιστεί live σε ~1 λεπτό (auto-deploy).");
+        } else if (res.status === 401) {
+          editDlg.close();
+          toast("Η συνεδρία έληξε. Ξαναμπείτε με PIN.");
+          exitEdit();
+        } else {
+          toast("Δεν αποθηκεύτηκε: " + (data.error || "σφάλμα"));
+        }
+      } catch (e) {
+        toast("Σφάλμα σύνδεσης. Δοκιμάστε ξανά.");
+      } finally {
+        saveBtn.disabled = false;
+        saveBtn.innerHTML = "Αποθήκευση &amp; δημοσίευση";
+      }
+    }
+
+    [pinDlg, editDlg].forEach((dlg) => {
+      dlg.addEventListener("click", (e) => { if (e.target === dlg) dlg.close(); });
+    });
+  })();
 
   /* ---------- Schema.org JSON-LD ---------- */
   const ld = {

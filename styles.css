@@ -940,6 +940,97 @@ body {
   transform: translateX(-50%) translateY(0);
 }
 
+/* ---------- Διαχείριση / Editor ---------- */
+.admin-trigger {
+  display: inline-block;
+  margin-top: 1.6rem;
+  padding: 0.4rem 1rem;
+  background: none;
+  border: none;
+  font-family: var(--font-ui);
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  opacity: 0.45;
+  cursor: pointer;
+  transition: opacity 0.25s, color 0.25s;
+}
+.admin-trigger:hover { opacity: 1; }
+.admin-trigger.active { opacity: 1; color: var(--gold); }
+
+.admin-dialog {
+  width: min(94vw, 460px);
+  margin: auto;
+  border: 1px solid var(--line);
+  background: var(--dialog-bg);
+  color: var(--ink);
+  padding: clamp(1.6rem, 4vw, 2.4rem);
+}
+.admin-dialog::backdrop {
+  background: rgba(14, 13, 12, 0.6);
+  backdrop-filter: blur(6px);
+}
+.admin-title {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 1.5rem;
+  margin-bottom: 0.8rem;
+}
+.admin-text {
+  font-family: var(--font-ui);
+  font-weight: 300;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  margin-bottom: 1.2rem;
+}
+.admin-input,
+.admin-textarea {
+  width: 100%;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid var(--line);
+  border-radius: 0;
+  background: var(--bg-a);
+  color: var(--ink);
+  font-family: var(--font-prose);
+  font-size: 1.05rem;
+  margin-bottom: 1.3rem;
+}
+.admin-textarea { resize: vertical; min-height: 7rem; line-height: 1.6; }
+.admin-input:focus,
+.admin-textarea:focus { outline: 1px solid var(--accent); border-color: var(--accent); }
+.admin-actions {
+  display: flex;
+  gap: 0.7rem;
+  justify-content: flex-end;
+}
+.edit-dialog { width: min(94vw, 560px); }
+
+/* Μολυβάκι δίπλα σε κάθε επεξεργάσιμο πεδίο (μόνο σε edit mode) */
+[data-edit] { position: relative; }
+.edit-pencil {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  margin-left: 0.5rem;
+  vertical-align: middle;
+  border: 1px solid var(--gold);
+  border-radius: 0;
+  background: var(--bg-a);
+  color: var(--gold);
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.edit-pencil:hover { background: var(--gold); color: #fff; }
+.edit-mode .edit-pencil { display: inline-flex; }
+.edit-mode [data-edit] {
+  outline: 1px dashed rgba(154, 129, 84, 0.5);
+  outline-offset: 4px;
+}
+
 /* ---------- Lightbox ---------- */
 .lightbox {
   width: 100vw;
