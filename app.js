@@ -652,15 +652,12 @@
 
   /* ---------- Cinematic parallax (interlude) ----------
      Η εικόνα κινείται πιο αργά από το scroll -> βάθος. Μόνο transform
-     (GPU), rAF-throttled. Ανενεργό σε κινητά + reduced-motion (εκεί
-     μένει στατική) για να μην υπάρχει jank. */
+     (GPU), rAF-throttled. Σε κινητό τρέχει ηπιότερα, σε reduced-motion
+     μένει στατική (CSS override). */
   const interludeBg = document.getElementById("interludeBg");
-  if (
-    interludeBg &&
-    !reducedMotion &&
-    window.matchMedia("(min-width: 901px)").matches
-  ) {
+  if (interludeBg && !reducedMotion) {
     const band = interludeBg.parentElement;
+    const deskMq = window.matchMedia("(min-width: 901px)");
     let pTick = false;
     function parallax() {
       pTick = false;
@@ -669,7 +666,8 @@
       if (rect.bottom < -50 || rect.top > vh + 50) return;
       const center = rect.top + rect.height / 2;
       const rel = (center - vh / 2) / (vh / 2 + rect.height / 2); // ~ -1..1
-      const y = -rel * rect.height * 0.14; // μένει μέσα στο 18% overflow
+      const depth = deskMq.matches ? 0.2 : 0.11;
+      const y = -rel * rect.height * depth; // μένει μέσα στο 26% overflow
       interludeBg.style.transform = `translate3d(0, ${y.toFixed(1)}px, 0)`;
     }
     const onParallax = () => {
@@ -681,6 +679,43 @@
     window.addEventListener("scroll", onParallax, { passive: true });
     window.addEventListener("resize", onParallax, { passive: true });
     parallax();
+  }
+
+  /* ---------- Editorial drift (φωτογραφίες καταλόγου) ----------
+     Κάθε φωτογραφία είναι ελαφρά μεγεθυσμένη (scale 1.1) και ολισθαίνει
+     αντίθετα στο scroll μέσα στο πλαίσιό της -> αίσθηση βάθους σε όλο
+     τον κατάλογο. Μόνο transform (GPU), desktop μόνο. */
+  const driftFrames = Array.from(document.querySelectorAll(".frame"));
+  if (
+    driftFrames.length &&
+    !reducedMotion &&
+    window.matchMedia("(min-width: 901px)").matches
+  ) {
+    document.body.classList.add("drift-on");
+    let dTick = false;
+    function drift() {
+      dTick = false;
+      const vh = window.innerHeight;
+      for (const frame of driftFrames) {
+        const img = frame.querySelector("img");
+        if (!img) continue;
+        const r = frame.getBoundingClientRect();
+        if (r.bottom < -80 || r.top > vh + 80) continue;
+        const center = r.top + r.height / 2;
+        const rel = (center - vh / 2) / (vh / 2 + r.height / 2); // ~ -1..1
+        const y = rel * r.height * 0.045; // scale 1.1 καλύπτει ±4.5%
+        img.style.transform = `translate3d(0, ${y.toFixed(1)}px, 0) scale(1.1)`;
+      }
+    }
+    const onDrift = () => {
+      if (!dTick) {
+        dTick = true;
+        requestAnimationFrame(drift);
+      }
+    };
+    window.addEventListener("scroll", onDrift, { passive: true });
+    window.addEventListener("resize", onDrift, { passive: true });
+    drift();
   }
 
   /* ---------- Schema.org JSON-LD ---------- */
