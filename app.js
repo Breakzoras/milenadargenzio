@@ -67,20 +67,20 @@
     likesFab.classList.toggle("has-items", likes.length > 0);
   }
 
-  function heartSvg(filled) {
+  /* Εικονίδιο: "+" όταν δεν είναι στη λίστα, "✓" όταν είναι. Πιο ξεκάθαρο
+     affordance για τον χρήστη από μια καρδιά. */
+  function likeIcon(saved) {
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     svg.setAttribute("viewBox", "0 0 24 24");
     svg.setAttribute("width", "20");
     svg.setAttribute("height", "20");
     svg.setAttribute("aria-hidden", "true");
+    svg.setAttribute("fill", "none");
+    svg.setAttribute("stroke", "currentColor");
+    svg.setAttribute("stroke-width", "2");
     const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-    path.setAttribute(
-      "d",
-      "M12 20.2C7.6 17 3 13.4 3 9.1 3 6.4 5.1 4.3 7.7 4.3c1.7 0 3.3.9 4.3 2.3 1-1.4 2.6-2.3 4.3-2.3 2.6 0 4.7 2.1 4.7 4.8 0 4.3-4.6 7.9-9 11.1Z"
-    );
-    path.setAttribute("fill", filled ? "currentColor" : "none");
-    path.setAttribute("stroke", "currentColor");
-    path.setAttribute("stroke-width", "1.7");
+    path.setAttribute("stroke-linecap", "round");
+    path.setAttribute("d", saved ? "M5 12.5l4.5 4.5L19 7" : "M12 5v14M5 12h14");
     svg.appendChild(path);
     return svg;
   }
@@ -91,7 +91,10 @@
     const liked = likes.includes(code);
     btn.classList.toggle("liked", liked);
     btn.setAttribute("aria-pressed", liked ? "true" : "false");
-    btn.replaceChildren(heartSvg(liked), document.createTextNode(liked ? "Στη λίστα σας" : "Μου αρέσει"));
+    btn.replaceChildren(
+      likeIcon(liked),
+      document.createTextNode(liked ? "Αποθηκευμένο στη λίστα μου" : "Μου αρέσει, κράτησέ το")
+    );
   }
 
   function toggleLike(code) {
@@ -104,14 +107,14 @@
       likes.push(code);
       saveLikes();
       syncLikeButton(code);
-      toast(`Ο κωδικός ${code} αποθηκεύτηκε. Θα τον βρείτε στο «Η λίστα μου», κάτω δεξιά.`);
+      toast(`Ο κωδικός ${code} αποθηκεύτηκε. Δείτε τη λίστα σας κάτω δεξιά.`);
     }
   }
 
   function makeLikeButton(code) {
     const btn = document.createElement("button");
     btn.type = "button";
-    btn.className = "btn like-btn";
+    btn.className = "like-btn";
     btn.setAttribute("aria-pressed", "false");
     btn.setAttribute("aria-label", `Μου αρέσει το νυφικό με κωδικό ${code}, αποθήκευση στη λίστα μου`);
     btn.addEventListener("click", () => toggleLike(code));
@@ -142,13 +145,24 @@
   }
 
   function ctaRow(code) {
+    const wrap = document.createElement("div");
+    wrap.className = "cta-wrap";
+
+    /* Κύρια ενέργεια: Μου αρέσει */
+    wrap.appendChild(makeLikeButton(code));
+    const help = document.createElement("p");
+    help.className = "cta-help";
+    help.textContent = "Κρατήστε τον κωδικό στη λίστα σας και στείλτε τον μας όποτε θέλετε.";
+    wrap.appendChild(help);
+
+    /* Δευτερεύουσες ενέργειες: επικοινωνία */
     const row = document.createElement("div");
     row.className = "cta-row";
     const subject = encodeURIComponent(CONFIG.emailSubject.replace("{code}", code));
-    row.appendChild(makeLikeButton(code));
     row.appendChild(revealButton("Τηλέφωνο", CONFIG.phone, telHref()));
     row.appendChild(revealButton("Email", CONFIG.email, `mailto:${CONFIG.email}?subject=${subject}`));
-    return row;
+    wrap.appendChild(row);
+    return wrap;
   }
 
   /* ---------- Placeholder "φωτογραφία" (SVG) ---------- */

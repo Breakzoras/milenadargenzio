@@ -709,72 +709,108 @@ body {
 }
 .site-footer .ornament { margin-bottom: 2rem; }
 
-/* ---------- Κουμπί "Μου αρέσει" ---------- */
-.like-btn {
-  border-color: var(--gold);
-  color: var(--gold);
-  gap: 0.6rem;
-}
-.like-btn:hover {
-  background: var(--gold);
-  border-color: var(--gold);
-  color: #fff;
-}
-.like-btn.liked {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: #fff;
-}
-.like-btn.liked:hover { background: var(--ink); border-color: var(--ink); }
-[data-theme="dark"] .like-btn.liked { color: #1c1521; }
-[data-theme="dark"] .like-btn.liked:hover { color: var(--bg-a); }
+/* ---------- CTA: κύρια ενέργεια "Μου αρέσει" + δευτερεύουσες ---------- */
+.cta-wrap { margin-top: 0.5rem; }
 
-/* ---------- Floating "Η λίστα μου" ---------- */
-.likes-fab {
-  position: fixed;
-  right: 1.3rem;
-  bottom: 1.3rem;
-  z-index: 20;
+/* Κύριο κουμπί: γεμάτο, μεγάλο, ξεχωρίζει σαφώς από τα κουμπιά επικοινωνίας */
+.like-btn {
   display: inline-flex;
   align-items: center;
-  gap: 0.6rem;
-  min-height: 54px;
-  padding: 0.5rem 1.5rem;
+  justify-content: center;
+  gap: 0.7rem;
+  width: 100%;
+  max-width: 28rem;
+  min-height: 60px;
+  padding: 0.6rem 1.8rem;
   border: 1px solid var(--ink);
   border-radius: 0;
   background: var(--ink);
   color: var(--bg-a);
   font-family: var(--font-ui);
-  font-size: 0.82rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.3s, color 0.3s, border-color 0.3s;
+}
+.like-btn svg { flex-shrink: 0; }
+.like-btn:hover { background: var(--gold); border-color: var(--gold); color: #fff; }
+.like-btn.liked {
+  background: transparent;
+  border-color: var(--gold);
+  color: var(--gold);
+}
+.like-btn.liked:hover { background: var(--gold); color: #fff; }
+
+/* Επεξηγηματικό κείμενο κάτω από το κύριο κουμπί */
+.cta-help {
+  max-width: 28rem;
+  margin: 0.7rem 0 1.6rem;
+  font-family: var(--font-ui);
+  font-weight: 300;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
+/* Δευτερεύοντα (Τηλέφωνο/Email): μικρότερα, διακριτικά */
+.cta-wrap .cta-row .btn {
+  min-height: 44px;
+  padding: 0.3rem 1.2rem;
+  font-size: 0.72rem;
+  border-color: var(--line);
+}
+
+/* ---------- Floating "Η λίστα μου" ---------- */
+.likes-fab {
+  position: fixed;
+  right: 1.2rem;
+  bottom: 1.2rem;
+  z-index: 20;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 50px;
+  padding: 0.5rem 1.2rem;
+  border: 1px solid var(--ink);
+  border-radius: 0;
+  background: var(--ink);
+  color: var(--bg-a);
+  font-family: var(--font-ui);
+  font-size: 0.8rem;
   font-weight: 400;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   cursor: pointer;
   box-shadow: var(--shadow);
   transition: background 0.3s, color 0.3s;
 }
-.likes-fab:hover { background: transparent; color: var(--ink); }
+.likes-fab svg { flex-shrink: 0; }
+.likes-fab:hover { background: var(--gold); border-color: var(--gold); color: #fff; }
 [data-theme="dark"] .likes-fab { background: var(--ink); color: var(--bg-a); }
-[data-theme="dark"] .likes-fab:hover { background: transparent; color: var(--ink); }
+[data-theme="dark"] .likes-fab:hover { background: var(--gold); color: #fff; }
+.likes-fab-label { white-space: nowrap; }
+/* Ο μετρητής εμφανίζεται μόνο όταν υπάρχουν αποθηκευμένα (όχι "0") */
 .likes-count {
-  display: inline-flex;
+  display: none;
   align-items: center;
   justify-content: center;
-  min-width: 1.6rem;
-  height: 1.6rem;
+  min-width: 1.5rem;
+  height: 1.5rem;
   padding: 0 0.35rem;
   border-radius: 0;
   background: var(--gold);
   color: #fff;
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   font-weight: 500;
   letter-spacing: 0;
 }
-.likes-fab:hover .likes-count { background: var(--gold); color: #fff; }
+.likes-fab.has-items .likes-count { display: inline-flex; }
 .likes-fab.has-items .likes-count { animation: countPop 0.4s cubic-bezier(0.2, 0.6, 0.2, 1); }
 @keyframes countPop {
   0% { transform: scale(1); }
-  50% { transform: scale(1.35); }
+  50% { transform: scale(1.3); }
   100% { transform: scale(1); }
 }
 
@@ -1050,20 +1086,23 @@ body {
   .ch-specs dt { padding-top: 0.6rem; }
   .ch-specs dd { margin-bottom: 0.2rem; }
 
-  /* Κουμπιά: γεμίζουν τη γραμμή, μεγάλος στόχος αφής */
-  .cta-row { gap: 0.6rem; }
-  .like-btn { flex: 1 1 100%; }
-  .ch-info .cta-row .btn { flex: 1 1 calc(50% - 0.3rem); }
+  /* Κουμπιά: κύριο "Μου αρέσει" γεμάτο πλάτος, επικοινωνία 50/50 */
+  .like-btn { max-width: none; min-height: 58px; font-size: 0.9rem; }
+  .cta-help { max-width: none; }
+  .cta-wrap .cta-row { gap: 0.6rem; }
+  .cta-wrap .cta-row .btn { flex: 1 1 calc(50% - 0.3rem); min-height: 46px; }
 
-  /* Floating λίστα: συμπαγές αλλά ευδιάκριτο */
+  /* Floating λίστα: συμπαγές αλλά πάντα με ετικέτα (εξηγεί τι είναι) */
   .likes-fab {
     right: 0.8rem;
     bottom: 0.8rem;
-    min-height: 50px;
-    padding: 0.4rem 1rem;
-    font-size: 0.82rem;
-    letter-spacing: 0.06em;
+    min-height: 46px;
+    padding: 0.4rem 0.95rem;
+    font-size: 0.74rem;
+    letter-spacing: 0.1em;
+    gap: 0.45rem;
   }
+  .likes-fab svg { width: 18px; height: 18px; }
 
   /* Dialogs full-ish width */
   .index-dialog, .likes-dialog { width: 94vw; max-height: 86vh; }
@@ -1085,10 +1124,10 @@ body {
 /* Πολύ μικρά κινητά (<=360px) */
 @media (max-width: 360px) {
   .wordmark { font-size: 1.2rem; }
-  .btn-ghost { padding: 0.4rem 0.8rem; font-size: 0.68rem; }
+  .btn-ghost { padding: 0.4rem 0.7rem; font-size: 0.64rem; letter-spacing: 0.06em; }
   .hero-title { font-size: clamp(2rem, 12.5vw, 2.6rem); }
-  .likes-fab-label { display: none; }
-  .likes-fab { padding: 0; width: 52px; height: 52px; border-radius: 50%; justify-content: center; }
+  /* Το fab κρατάει σύντομη ετικέτα, ΔΕΝ γίνεται icon-only (να εξηγεί τι είναι) */
+  .likes-fab { font-size: 0.68rem; padding: 0.4rem 0.8rem; letter-spacing: 0.06em; }
 }
 
 /* ---------- Reduced motion ---------- */
