@@ -1074,20 +1074,109 @@ body {
   max-width: 100%;
   max-height: 80vh;
   object-fit: contain;
-  border: 1px solid rgba(214, 187, 230, 0.25);
-  box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.8);
-  animation: lbIn 0.4s cubic-bezier(0.2, 0.7, 0.2, 1);
+  border: 1px solid rgba(196, 173, 133, 0.3);
+  box-shadow: 0 40px 90px -24px rgba(0, 0, 0, 0.85);
 }
-@keyframes lbIn {
-  from { opacity: 0; transform: scale(0.94); }
-  to { opacity: 1; transform: scale(1); }
+/* Είσοδος: rise + scale + blur->sharp. Ξαναπαίζει σε κάθε αλλαγή φωτό
+   μέσω της κλάσης .lb-animate (toggle με reflow στο JS). */
+.lb-animate .lb-figure img {
+  animation: lbImgIn 0.62s cubic-bezier(0.16, 0.84, 0.24, 1) both;
 }
+@keyframes lbImgIn {
+  from { opacity: 0; transform: translateY(24px) scale(0.92); filter: blur(7px); }
+  to   { opacity: 1; transform: none; filter: blur(0); }
+}
+.lightbox[open]::backdrop { animation: lbBackIn 0.45s ease both; }
+@keyframes lbBackIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* ---------- Premium χρυσή ετικέτα (couture hang-tag, θέση φωτό) ---------- */
 .lb-caption {
-  font-family: var(--font-ui);
-  font-size: 0.95rem;
-  letter-spacing: 0.06em;
-  color: #e9ddcb;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+.lb-animate .lb-tag {
+  animation: lbTagIn 0.7s cubic-bezier(0.16, 0.84, 0.24, 1) both;
+  animation-delay: 0.16s;
+}
+@keyframes lbTagIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: none; }
+}
+.lb-tag {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.95rem 2.1rem 1.05rem;
+  /* Καθαρό χρυσό border + λεπτή εσωτερική χρυσή γραμμή (couture πλαίσιο) */
+  border: 1px solid #c4ad85;
+  box-shadow: inset 0 0 0 4px rgba(18, 14, 11, 0.5),
+              inset 0 0 0 5px rgba(196, 173, 133, 0.3);
+  background: rgba(18, 14, 11, 0.5);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
   text-align: center;
+  max-width: 86vw;
+}
+.lb-tag-brand {
+  font-family: var(--font-ui);
+  font-size: 0.6rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: #c4ad85;
+  padding-left: 0.4em;
+}
+.lb-tag-rule { display: flex; align-items: center; gap: 0.55rem; }
+.lb-tag-rule::before,
+.lb-tag-rule::after {
+  content: "";
+  width: 32px;
+  height: 1px;
+  background: #c4ad85;
+  opacity: 0.55;
+}
+.lb-tag-diamond {
+  width: 5px;
+  height: 5px;
+  transform: rotate(45deg);
+  background: #c4ad85;
+}
+.lb-tag-code {
+  font-family: var(--font-display);
+  font-size: 1.45rem;
+  line-height: 1.1;
+  color: #f5efe6;
+  letter-spacing: 0.02em;
+}
+.lb-tag-title {
+  font-family: var(--font-prose);
+  font-style: italic;
+  font-size: 1rem;
+  color: #e6dac6;
+  max-width: 30ch;
+}
+.lb-tag-pos {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.15rem;
+}
+.lb-tag-dots { display: inline-flex; gap: 0.4rem; }
+.lb-tag-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  border: 1px solid #c4ad85;
+  opacity: 0.45;
+  transition: opacity 0.3s, background 0.3s;
+}
+.lb-tag-dot.on { background: #c4ad85; opacity: 1; }
+.lb-tag-count {
+  font-family: var(--font-ui);
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  color: #c4ad85;
 }
 .lb-close {
   position: fixed;
@@ -1244,7 +1333,9 @@ body {
     transition: none !important;
   }
   .reveal-code { letter-spacing: 0.32em !important; }
-  .lb-figure img { animation: none !important; }
+  .lb-figure img,
+  .lb-animate .lb-figure img,
+  .lb-animate .lb-tag { animation: none !important; opacity: 1 !important; transform: none !important; filter: none !important; }
   .reveal-wipe {
     opacity: 1 !important;
     transform: none !important;

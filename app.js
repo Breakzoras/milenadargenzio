@@ -224,14 +224,67 @@
   let lbList = [];
   let lbIndex = 0;
 
+  const pad2 = (n) => (n < 10 ? "0" + n : "" + n);
+
+  /* Premium χρυσή ετικέτα (couture hang-tag) με τη θέση της φωτό.
+     createElement (όχι innerHTML) -> XSS-safe με δεδομένα χρήστη. */
+  function buildLbTag(dress, idx, total) {
+    const tag = document.createElement("div");
+    tag.className = "lb-tag";
+
+    const brand = document.createElement("p");
+    brand.className = "lb-tag-brand";
+    brand.textContent = "Milena D'Argenzio";
+    tag.appendChild(brand);
+
+    const rule = document.createElement("div");
+    rule.className = "lb-tag-rule";
+    const dia = document.createElement("span");
+    dia.className = "lb-tag-diamond";
+    rule.appendChild(dia);
+    tag.appendChild(rule);
+
+    const code = document.createElement("p");
+    code.className = "lb-tag-code";
+    code.textContent = "Νο " + dress.code;
+    tag.appendChild(code);
+
+    const title = document.createElement("p");
+    title.className = "lb-tag-title";
+    title.textContent = dress.title;
+    tag.appendChild(title);
+
+    if (total > 1) {
+      const pos = document.createElement("div");
+      pos.className = "lb-tag-pos";
+      const dots = document.createElement("div");
+      dots.className = "lb-tag-dots";
+      for (let k = 0; k < total; k++) {
+        const dot = document.createElement("span");
+        dot.className = "lb-tag-dot" + (k === idx ? " on" : "");
+        dots.appendChild(dot);
+      }
+      const count = document.createElement("span");
+      count.className = "lb-tag-count";
+      count.textContent = pad2(idx + 1) + " / " + pad2(total);
+      pos.appendChild(dots);
+      pos.appendChild(count);
+      tag.appendChild(pos);
+    }
+    return tag;
+  }
+
   function lbRender() {
     lbImage.src = lbList[lbIndex];
     lbImage.alt = `Νυφικό ${lbDress.code}: ${lbDress.title}`;
-    const counter = lbList.length > 1 ? ` (${lbIndex + 1}/${lbList.length})` : "";
-    lbCaption.textContent = `Κωδικός ${lbDress.code} · ${lbDress.title}${counter}`;
     const multi = lbList.length > 1;
+    lbCaption.replaceChildren(buildLbTag(lbDress, lbIndex, lbList.length));
     lbPrev.hidden = !multi;
     lbNext.hidden = !multi;
+    // Ξαναπαίζει την είσοδο (image + ετικέτα) σε κάθε άνοιγμα/πλοήγηση
+    lightbox.classList.remove("lb-animate");
+    void lightbox.offsetWidth; // force reflow ώστε να ξαναρχίσει το animation
+    lightbox.classList.add("lb-animate");
   }
   function lbStep(delta) {
     if (lbList.length < 2) return;
