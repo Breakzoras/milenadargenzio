@@ -655,9 +655,12 @@
      (GPU), rAF-throttled. Σε κινητό τρέχει ηπιότερα, σε reduced-motion
      μένει στατική (CSS override). */
   const interludeBg = document.getElementById("interludeBg");
-  if (interludeBg && !reducedMotion) {
+  if (
+    interludeBg &&
+    !reducedMotion &&
+    window.matchMedia("(min-width: 901px)").matches
+  ) {
     const band = interludeBg.parentElement;
-    const deskMq = window.matchMedia("(min-width: 901px)");
     let pTick = false;
     function parallax() {
       pTick = false;
@@ -666,8 +669,7 @@
       if (rect.bottom < -50 || rect.top > vh + 50) return;
       const center = rect.top + rect.height / 2;
       const rel = (center - vh / 2) / (vh / 2 + rect.height / 2); // ~ -1..1
-      const depth = deskMq.matches ? 0.2 : 0.11;
-      const y = -rel * rect.height * depth; // μένει μέσα στο 26% overflow
+      const y = -rel * rect.height * 0.2; // μένει μέσα στο 26% overflow
       interludeBg.style.transform = `translate3d(0, ${y.toFixed(1)}px, 0)`;
     }
     const onParallax = () => {
@@ -717,6 +719,48 @@
     window.addEventListener("resize", onDrift, { passive: true });
     drift();
   }
+
+  /* ---------- Prefetch-on-idle (φωτογραφίες) ----------
+     Το loading="lazy" φορτώνει μόλις πλησιάσει η φωτό -> "pop-in" στο
+     γρήγορο scroll. Εδώ, ΑΦΟΥ φορτώσει η σελίδα και ο browser είναι
+     αδρανής, ζεσταίνουμε σιγά-σιγά (σειριακά, όχι 47 ταυτόχρονα) την
+     cache: πρώτα τα εξώφυλλα κάθε νυφικού, μετά τις υπόλοιπες. Έτσι στο
+     scroll είναι ήδη έτοιμες, χωρίς να μπλοκάρει το αρχικό render. */
+  (function prefetchOnIdle() {
+    const covers = [];
+    const extras = [];
+    DRESSES.forEach((d, i) => {
+      if (!d.photos || !d.photos.length) return;
+      covers.push(d.photos[0]);
+      for (let k = 1; k < d.photos.length; k++) extras.push(d.photos[k]);
+    });
+    const queue = covers.concat(extras);
+    let idx = 0;
+    function next() {
+      if (idx >= queue.length) return;
+      const src = queue[idx++];
+      const img = new Image();
+      img.decoding = "async";
+      // Σειριακά: μόλις φορτώσει/αποτύχει η μία, ζητάμε την επόμενη.
+      img.onload = img.onerror = () => {
+        if ("requestIdleCallback" in window) {
+          requestIdleCallback(next, { timeout: 600 });
+        } else {
+          setTimeout(next, 120);
+        }
+      };
+      img.src = src;
+    }
+    const start = () => {
+      if ("requestIdleCallback" in window) {
+        requestIdleCallback(next, { timeout: 1500 });
+      } else {
+        setTimeout(next, 800);
+      }
+    };
+    if (document.readyState === "complete") start();
+    else window.addEventListener("load", start, { once: true });
+  })();
 
   /* ---------- Schema.org JSON-LD ---------- */
   const ld = {
