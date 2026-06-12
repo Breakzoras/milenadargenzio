@@ -1076,7 +1076,8 @@ body {
   max-height: 80vh;
   max-height: min(80vh, calc(100dvh - 260px));
   object-fit: contain;
-  border: 1px solid rgba(196, 173, 133, 0.3);
+  /* Καθαρό χρυσό πλαίσιο γύρω από τη φωτογραφία (couture corniche) */
+  border: 2px solid #c4ad85;
   box-shadow: 0 40px 90px -24px rgba(0, 0, 0, 0.85);
 }
 /* Είσοδος: rise + scale + blur->sharp. Ξαναπαίζει σε κάθε αλλαγή φωτό
