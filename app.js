@@ -69,7 +69,7 @@
   }
   likes = likes.filter((c) => DRESSES.some((d) => d.code === c));
 
-  const likeButtons = new Map(); // code -> button
+  const likeButtons = new Map(); // code -> [buttons] (chapter + modal, κρατιούνται σε sync)
   const likesCountEl = document.getElementById("likesCount");
   const likesFab = document.getElementById("likesFab");
   const likesDialog = document.getElementById("likesDialog");
@@ -100,15 +100,19 @@
   }
 
   function syncLikeButton(code) {
-    const btn = likeButtons.get(code);
-    if (!btn) return;
+    let arr = likeButtons.get(code);
+    if (!arr) return;
+    arr = arr.filter((b) => b.isConnected); // καθάρισε αποσυνδεδεμένα (παλιά modal κουμπιά)
+    likeButtons.set(code, arr);
     const liked = likes.includes(code);
-    btn.classList.toggle("liked", liked);
-    btn.setAttribute("aria-pressed", liked ? "true" : "false");
-    btn.replaceChildren(
-      likeIcon(liked),
-      document.createTextNode(liked ? "Αποθηκευμένο στη λίστα μου" : "Μου αρέσει, κράτησέ το")
-    );
+    for (const btn of arr) {
+      btn.classList.toggle("liked", liked);
+      btn.setAttribute("aria-pressed", liked ? "true" : "false");
+      btn.replaceChildren(
+        likeIcon(liked),
+        document.createTextNode(liked ? "Αποθηκευμένο στη λίστα μου" : "Μου αρέσει, κράτησέ το")
+      );
+    }
   }
 
   function toggleLike(code) {
@@ -132,7 +136,9 @@
     btn.setAttribute("aria-pressed", "false");
     btn.setAttribute("aria-label", `Μου αρέσει το νυφικό με κωδικό ${code}, αποθήκευση στη λίστα μου`);
     btn.addEventListener("click", () => toggleLike(code));
-    likeButtons.set(code, btn);
+    const arr = likeButtons.get(code) || [];
+    arr.push(btn);
+    likeButtons.set(code, arr);
     return btn;
   }
 
@@ -813,6 +819,149 @@
     };
     if (document.readyState === "complete") start();
     else window.addEventListener("load", start, { once: true });
+  })();
+
+  /* ---------- Εναλλαγή προβολής (editorial scroll <-> κάρτες) + modal ----------
+     Default: το scroll. Κουμπί πάνω δεξιά (δίπλα στο theme) -> grid με κάρτες
+     (3 desktop / 2 κινητό). Κλικ σε κάρτα -> modal με όλη την πληροφορία.
+     Η επιλογή αποθηκεύεται (localStorage). */
+  (function setupViews() {
+    const grid = document.getElementById("catalogGrid");
+    const toggleBtn = document.getElementById("viewToggle");
+    const modal = document.getElementById("dressModal");
+    const dmBody = document.getElementById("dmBody");
+    if (!grid || !toggleBtn || !modal || !dmBody) return;
+    const VIEW_KEY = "md-view";
+    const root = document.documentElement;
+
+    /* --- Κάρτες: φωτό + κωδικός + τίτλος --- */
+    DRESSES.forEach((d, i) => {
+      const card = document.createElement("button");
+      card.type = "button";
+      card.className = "grid-card";
+      card.setAttribute("aria-label", `Λεπτομέρειες, νυφικό ${d.code}: ${d.title}`);
+      const ph = document.createElement("div");
+      ph.className = "gc-photo";
+      const img = document.createElement("img");
+      img.src = firstPhoto(d, i);
+      img.alt = `Νυφικό ${d.code}: ${d.title}`;
+      img.loading = "lazy";
+      img.decoding = "async";
+      ph.appendChild(img);
+      card.appendChild(ph);
+      const codeEl = document.createElement("p");
+      codeEl.className = "gc-code";
+      codeEl.textContent = `Κωδικός ${d.code}`;
+      const titleEl = document.createElement("p");
+      titleEl.className = "gc-title";
+      titleEl.textContent = d.title;
+      card.appendChild(codeEl);
+      card.appendChild(titleEl);
+      card.addEventListener("click", () => openDressModal(d, i));
+      grid.appendChild(card);
+    });
+
+    /* --- Modal: όλη η καρτέλα σε popup --- */
+    function openDressModal(d, i) {
+      const gallery = d.photos && d.photos.length ? d.photos.slice() : [placeholderSrc(d.code, i)];
+      dmBody.replaceChildren();
+      let active = 0;
+
+      const gWrap = document.createElement("div");
+      gWrap.className = "dm-photo";
+      const main = document.createElement("button");
+      main.type = "button";
+      main.className = "dm-main";
+      main.setAttribute("aria-label", "Άνοιγμα φωτογραφίας σε πλήρη οθόνη");
+      const mainImg = document.createElement("img");
+      mainImg.src = gallery[0];
+      mainImg.alt = `Νυφικό ${d.code}: ${d.title}`;
+      main.appendChild(mainImg);
+      main.addEventListener("click", () => openLightbox(d, gallery, active));
+      gWrap.appendChild(main);
+      if (gallery.length > 1) {
+        const thumbs = document.createElement("div");
+        thumbs.className = "dm-thumbs";
+        gallery.forEach((src, pi) => {
+          const tb = document.createElement("button");
+          tb.type = "button";
+          tb.className = "dm-thumb" + (pi === 0 ? " active" : "");
+          const ti = document.createElement("img");
+          ti.src = src; ti.alt = ""; ti.loading = "lazy"; ti.decoding = "async";
+          tb.appendChild(ti);
+          tb.addEventListener("click", () => {
+            active = pi; mainImg.src = src;
+            thumbs.querySelectorAll(".dm-thumb").forEach((x) => x.classList.remove("active"));
+            tb.classList.add("active");
+          });
+          thumbs.appendChild(tb);
+        });
+        gWrap.appendChild(thumbs);
+      }
+      dmBody.appendChild(gWrap);
+
+      const info = document.createElement("div");
+      info.className = "dm-info";
+      const codeEl = document.createElement("p");
+      codeEl.className = "dm-code";
+      codeEl.textContent = `Κωδικός ${d.code}`;
+      info.appendChild(codeEl);
+      const titleEl = document.createElement("h2");
+      titleEl.className = "dm-title";
+      titleEl.textContent = d.title;
+      info.appendChild(titleEl);
+      const blurb = document.createElement("p");
+      blurb.className = "dm-blurb";
+      blurb.textContent = d.blurb;
+      info.appendChild(blurb);
+      if (d.details && Object.keys(d.details).length) {
+        const dl = document.createElement("dl");
+        dl.className = "dm-specs";
+        for (const [k, v] of Object.entries(d.details)) {
+          const dt = document.createElement("dt"); dt.textContent = k;
+          const dd = document.createElement("dd"); dd.textContent = v;
+          dl.appendChild(dt); dl.appendChild(dd);
+        }
+        info.appendChild(dl);
+      }
+      const price = document.createElement("p");
+      price.className = "dm-price";
+      price.textContent = d.retail != null ? euro.format(d.retail) : "Διαθέσιμο";
+      info.appendChild(price);
+      const cta = ctaRow(d.code);
+      info.appendChild(cta);
+      dmBody.appendChild(info);
+
+      syncLikeButton(d.code);
+      if (!modal.open) modal.showModal();
+      dmBody.scrollTop = 0;
+    }
+
+    document.getElementById("dmClose").addEventListener("click", () => modal.close());
+    modal.addEventListener("click", (e) => { if (e.target === modal) modal.close(); });
+
+    /* --- Εναλλαγή + μνήμη --- */
+    function applyView(v) {
+      const grid = v === "grid";
+      root.dataset.view = grid ? "grid" : "scroll";
+      toggleBtn.setAttribute("aria-pressed", grid ? "true" : "false");
+      toggleBtn.setAttribute("aria-label", grid ? "Εναλλαγή σε προβολή κύλισης" : "Εναλλαγή σε προβολή καρτών");
+      if (!grid) setTimeout(onRevealScroll, 60); // ξαναέλεγξε reveals επιστρέφοντας στο scroll
+    }
+    let view = "scroll";
+    try { if (localStorage.getItem(VIEW_KEY) === "grid") view = "grid"; } catch (e) {}
+    applyView(view);
+    toggleBtn.addEventListener("click", () => {
+      const next = root.dataset.view === "grid" ? "scroll" : "grid";
+      try { localStorage.setItem(VIEW_KEY, next); } catch (e) {}
+      applyView(next);
+      // Πήγαινε στην ενεργή λίστα (στις κάρτες, όχι πίσω στο hero)
+      requestAnimationFrame(() => {
+        const target = next === "grid" ? grid : document.getElementById("catalog");
+        const y = target.getBoundingClientRect().top + window.scrollY - 70;
+        window.scrollTo({ top: Math.max(0, y), behavior: "auto" });
+      });
+    });
   })();
 
   /* ---------- Schema.org JSON-LD ---------- */

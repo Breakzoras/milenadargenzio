@@ -16,8 +16,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=GFS+Didot&family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Commissioner:wght@300;400;500;600&family=Pinyon+Script&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="styles.css">
-  <script defer src="app.js"></script>
+  <link rel="stylesheet" href="styles.css?v=20260614">
+  <script defer src="app.js?v=20260614"></script>
 </head>
 <body>
   <a class="skip-link" href="#catalog">Μετάβαση στον κατάλογο</a>
@@ -29,6 +29,14 @@
     <a class="wordmark" href="#top" aria-label="Milena D'Argenzio, αρχή σελίδας">Milena <span>D'Argenzio</span></a>
     <nav class="header-actions" aria-label="Βασικές ενέργειες">
       <button class="btn btn-ghost" id="indexBtn" type="button">Ευρετήριο</button>
+      <button class="theme-toggle view-toggle" id="viewToggle" type="button" aria-pressed="false" aria-label="Εναλλαγή σε προβολή καρτών">
+        <svg class="icon-grid" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6">
+          <rect x="3.5" y="3.5" width="7" height="7" rx="1"/><rect x="13.5" y="3.5" width="7" height="7" rx="1"/><rect x="3.5" y="13.5" width="7" height="7" rx="1"/><rect x="13.5" y="13.5" width="7" height="7" rx="1"/>
+        </svg>
+        <svg class="icon-scroll" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6">
+          <rect x="6" y="3.5" width="12" height="17" rx="1.5"/><path d="M9.5 8.5h5M9.5 12h5"/>
+        </svg>
+      </button>
       <button class="theme-toggle" id="themeToggle" type="button" aria-label="Εναλλαγή σκούρου και φωτεινού θέματος">
         <svg class="icon-sun" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5">
           <circle cx="12" cy="12" r="4.2"/>
@@ -95,6 +103,8 @@
 
     <!-- ============ CATALOG (rendered by app.js) ============ -->
     <section id="catalog" class="catalog" aria-label="Κατάλογος νυφικών"></section>
+    <!-- ============ CATALOG GRID / CARD VIEW (rendered by app.js) ============ -->
+    <section id="catalogGrid" class="catalog-grid" aria-label="Κατάλογος νυφικών σε κάρτες"></section>
 
     <!-- ============ FINAL CTA ============ -->
     <section class="outro" aria-label="Επικοινωνία">
@@ -174,6 +184,16 @@
       και να μας τους στείλετε ή να μας τους αναφέρετε τηλεφωνικά.
     </p>
     <button id="tutorialOk" class="btn btn-fill tutorial-ok" type="button">Κατάλαβα, ας ξεκινήσουμε</button>
+  </dialog>
+
+  <!-- ============ DRESS MODAL (card view -> πλήρης καρτέλα) ============ -->
+  <dialog id="dressModal" class="dress-modal" aria-label="Λεπτομέρειες νυφικού">
+    <button class="dm-close" id="dmClose" type="button" aria-label="Κλείσιμο">
+      <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6">
+        <path d="M5 5l14 14M19 5 5 19"/>
+      </svg>
+    </button>
+    <div class="dm-body" id="dmBody"></div>
   </dialog>
 
   <!-- ============ LIGHTBOX (φωτογραφία πλήρους οθόνης) ============ -->
