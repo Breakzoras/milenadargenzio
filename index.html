@@ -16,8 +16,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=GFS+Didot&family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Commissioner:wght@300;400;500;600&family=Pinyon+Script&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="styles.css?v=20260614">
-  <script defer src="app.js?v=20260614"></script>
+  <link rel="stylesheet" href="styles.css?v=20260614d">
+  <script defer src="app.js?v=20260614d"></script>
 </head>
 <body>
   <a class="skip-link" href="#catalog">Μετάβαση στον κατάλογο</a>
@@ -29,7 +29,7 @@
     <a class="wordmark" href="#top" aria-label="Milena D'Argenzio, αρχή σελίδας">Milena <span>D'Argenzio</span></a>
     <nav class="header-actions" aria-label="Βασικές ενέργειες">
       <button class="btn btn-ghost" id="indexBtn" type="button">Ευρετήριο</button>
-      <button class="theme-toggle view-toggle" id="viewToggle" type="button" aria-pressed="false" aria-label="Εναλλαγή σε προβολή καρτών">
+      <button class="theme-toggle view-toggle" id="viewToggle" type="button" aria-pressed="false" title="Αλλαγή προβολής: κάρτες ή αναλυτική" aria-label="Εναλλαγή σε προβολή καρτών">
         <svg class="icon-grid" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6">
           <rect x="3.5" y="3.5" width="7" height="7" rx="1"/><rect x="13.5" y="3.5" width="7" height="7" rx="1"/><rect x="3.5" y="13.5" width="7" height="7" rx="1"/><rect x="13.5" y="13.5" width="7" height="7" rx="1"/>
         </svg>
@@ -94,10 +94,13 @@
 
     <!-- ============ CINEMATIC PARALLAX INTERLUDE ============ -->
     <section class="interlude" aria-label="Η συλλογή">
-      <div class="interlude-bg" id="interludeBg" aria-hidden="true"></div>
+      <video class="interlude-bg" id="interludeBg" aria-hidden="true" autoplay loop muted playsinline preload="auto" poster="video/interlude-poster.jpg">
+        <source src="video/interlude.mp4" type="video/mp4">
+      </video>
+      <div class="interlude-shade" aria-hidden="true"></div>
       <div class="interlude-inner reveal">
         <p class="interlude-overline">Χειροποίητη ραπτική</p>
-        <h2 class="interlude-title">Κάθε νυφικό,<br>μια μοναδική δημιουργία</h2>
+        <h2 class="interlude-title">Κάθε νυφικό,<br>ραμμένο στο χέρι</h2>
       </div>
     </section>
 
@@ -109,12 +112,7 @@
     <!-- ============ FINAL CTA ============ -->
     <section class="outro" aria-label="Επικοινωνία">
       <div class="outro-inner reveal">
-        <h2 class="outro-title">Η συλλογή δεν τελειώνει εδώ</h2>
-        <p class="outro-text">
-          Αυτά είναι τα πρώτα κομμάτια του καταλόγου. Η συλλογή του ατελιέ περιλαμβάνει πολύ
-          περισσότερα νυφικά, που φωτογραφίζονται και προστίθενται σταδιακά. Ο κατάλογος
-          ανανεώνεται τακτικά, αξίζει να τον επισκέπτεστε ξανά.
-        </p>
+        <h2 class="outro-title">Επικοινωνήστε μαζί μας</h2>
         <p class="outro-text">
           Για ειδικές τιμές επαγγελματιών, ραντεβού προβολής στη Θεσσαλονίκη
           ή προσφορά για το σύνολο της συλλογής, επικοινωνήστε μαζί μας.

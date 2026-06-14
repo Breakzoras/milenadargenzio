@@ -948,8 +948,9 @@
       toggleBtn.setAttribute("aria-label", grid ? "Εναλλαγή σε προβολή κύλισης" : "Εναλλαγή σε προβολή καρτών");
       if (!grid) setTimeout(onRevealScroll, 60); // ξαναέλεγξε reveals επιστρέφοντας στο scroll
     }
-    let view = "scroll";
-    try { if (localStorage.getItem(VIEW_KEY) === "grid") view = "grid"; } catch (e) {}
+    // DEFAULT = κάρτες. Αλλάζει μόνο αν ο χρήστης έχει διαλέξει "scroll".
+    let view = "grid";
+    try { if (localStorage.getItem(VIEW_KEY) === "scroll") view = "scroll"; } catch (e) {}
     applyView(view);
     toggleBtn.addEventListener("click", () => {
       const next = root.dataset.view === "grid" ? "scroll" : "grid";
@@ -962,6 +963,35 @@
         window.scrollTo({ top: Math.max(0, y), behavior: "auto" });
       });
     });
+
+    /* Υπόμνημα (μία φορά) για boomer χρήστες: τι κάνει το κουμπί προβολής */
+    try {
+      if (localStorage.getItem("md-view-hint") !== "1") {
+        const hint = document.createElement("div");
+        hint.className = "view-hint";
+        hint.innerHTML = '<span class="vh-t">Αλλαγή προβολής</span>Δείτε τα νυφικά σε <b>κάρτες</b> ή σε <b>αναλυτική</b> προβολή, πατώντας εδώ.';
+        document.body.appendChild(hint);
+        const place = () => {
+          const r = toggleBtn.getBoundingClientRect();
+          hint.style.top = Math.round(r.bottom + 10) + "px";
+          hint.style.right = Math.round(window.innerWidth - r.right) + "px";
+        };
+        place();
+        const dismiss = () => {
+          hint.classList.remove("show");
+          try { localStorage.setItem("md-view-hint", "1"); } catch (e) {}
+          setTimeout(() => hint.remove(), 500);
+        };
+        setTimeout(() => { place(); hint.classList.add("show"); }, 1200);
+        hint.addEventListener("click", dismiss);
+        toggleBtn.addEventListener("click", dismiss, { once: true });
+        // Μη ενοχλητικό: φεύγει μόλις ο χρήστης κάνει οτιδήποτε (scroll/κλικ/πλήκτρο) + σύντομο safety
+        ["scroll", "pointerdown", "keydown"].forEach((ev) =>
+          window.addEventListener(ev, dismiss, { once: true, passive: true })
+        );
+        setTimeout(dismiss, 6000);
+      }
+    } catch (e) {}
   })();
 
   /* ---------- Schema.org JSON-LD ---------- */

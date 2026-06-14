@@ -362,48 +362,63 @@ body {
   position: relative;
   height: clamp(58vh, 78vh, 90vh);
   overflow: hidden;
-  display: grid;
-  place-items: center;
-  text-align: center;
+  /* Frame #6: μεταλλικό χρυσό gradient border, με περιθώριο ώστε να δείχνει "κορνίζα" */
+  margin: clamp(1.5rem, 4vw, 3.5rem);
+  border: 4px solid transparent;
+  border-image: linear-gradient(135deg, #e7d6b3, #9a8154 40%, #f3e6c8 55%, #6d5733 80%, #c4ad85) 1;
 }
-/* Η εικόνα είναι ψηλότερη από το band ώστε να "ταξιδεύει" με parallax
-   χωρίς να αποκαλύπτει κενά. Μόνο transform (GPU) -> λείο. */
+/* Βίντεο σε loop (boomerang). Ψηλότερο από το band για parallax (desktop). object-fit cover. */
 .interlude-bg {
   position: absolute;
   left: 0;
   right: 0;
   top: -26%;
   height: 152%;
-  background: var(--bg-c) url("photos/01/01.jpg") center 18% / cover no-repeat;
+  width: 100%;
+  object-fit: cover;
+  background: var(--bg-c);
   will-change: transform;
   transform: translate3d(0, 0, 0);
 }
-.interlude-bg::after {
-  content: "";
+/* Σκίαση: πιο σκούρα κάτω (εκεί κάθονται τα γράμματα) */
+.interlude-shade {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(14,13,12,0.55) 0%, rgba(14,13,12,0.35) 45%, rgba(14,13,12,0.65) 100%);
-}
-.interlude-inner {
-  position: relative;
   z-index: 1;
-  color: #f6f1e9;
-  padding: 0 1.5rem;
+  /* Σκούρο scrim ακριβώς πίσω από το κείμενο (κάτω-αριστερά) ώστε να διαβάζεται
+     καθαρά πάνω στο ανοιχτόχρωμο βίντεο, χωρίς να σκουραίνει όλη την εικόνα. */
+  background:
+    radial-gradient(125% 95% at 0% 100%, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.45) 30%, rgba(0,0,0,0) 58%),
+    linear-gradient(180deg, rgba(14,13,12,0.22) 0%, rgba(14,13,12,0.05) 40%, rgba(14,13,12,0.5) 100%);
+}
+/* Γράμματα: κάτω-αριστερά, διακριτικά (όχι δεσπόζοντα στο κέντρο) */
+.interlude-inner {
+  position: absolute;
+  z-index: 2;
+  left: clamp(1.3rem, 3.5vw, 2.8rem);
+  bottom: clamp(1.3rem, 3.5vw, 2.6rem);
+  right: auto;
+  text-align: left;
+  max-width: min(92%, 860px);
+  color: #fff;
 }
 .interlude-overline {
   font-family: var(--font-ui);
-  font-size: 0.8rem;
-  letter-spacing: 0.4em;
+  font-size: 0.72rem;
+  letter-spacing: 0.34em;
   text-transform: uppercase;
-  color: #d9c9a8;
-  margin-bottom: 1.4rem;
+  color: #ecdcba;
+  margin-bottom: 0.7rem;
+  /* Έντονο μαύρο περίγραμμα */
+  text-shadow: 0 0 2px #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000, 0 1px 6px rgba(0,0,0,.9);
 }
 .interlude-title {
   font-family: var(--font-display);
   font-weight: 400;
-  font-size: clamp(2rem, 5vw, 3.6rem);
-  line-height: 1.18;
-  text-shadow: 0 2px 30px rgba(0, 0, 0, 0.4);
+  font-size: clamp(1.4rem, 2.8vw, 2.2rem);
+  line-height: 1.25;
+  /* Έντονο σταράτο μαύρο περίγραμμα + σκιά, να διαβάζεται καθαρά πάνω στο ανοιχτό βίντεο */
+  text-shadow: 0 0 2px #000, -1.5px -1.5px 0 #000, 1.5px -1.5px 0 #000, -1.5px 1.5px 0 #000, 1.5px 1.5px 0 #000, 0 0 10px rgba(0,0,0,.85), 0 2px 14px rgba(0,0,0,.85);
 }
 
 /* ---------- Chapters ---------- */
@@ -1239,7 +1254,7 @@ body {
   /* Στο κινητό/tablet: ΟΧΙ parallax (στατική εικόνα, μηδέν jank σε iPhone).
      Επαναφέρουμε το bg ώστε να γεμίζει ακριβώς, χωρίς το desktop overflow. */
   .interlude-bg { top: 0; height: 100%; transform: none !important; }
-  .interlude { height: clamp(48vh, 60vh, 70vh); }
+  .interlude { height: clamp(48vh, 60vh, 70vh); border-width: 3px; margin: clamp(1rem, 4vw, 1.6rem); }
 }
 
 /* Κινητό */
@@ -1356,10 +1371,57 @@ body {
 [data-view="grid"] .view-toggle .icon-grid { display: none; }
 [data-view="grid"] .view-toggle .icon-scroll { display: inline; }
 
-/* Εναλλαγή scroll <-> grid */
+/* Υπόμνημα (μία φορά) για το κουμπί προβολής, boomer-friendly */
+.view-hint {
+  position: fixed;
+  top: 66px;
+  right: 14px;
+  z-index: 60;
+  max-width: 240px;
+  background: var(--card);
+  color: var(--ink);
+  border: 1px solid var(--gold);
+  padding: 0.75rem 0.95rem;
+  font-family: var(--font-ui);
+  font-weight: 300;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  box-shadow: var(--shadow);
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: opacity 0.45s, transform 0.45s;
+  cursor: pointer;
+}
+.view-hint.show { opacity: 1; transform: none; }
+.view-hint::before {
+  content: "";
+  position: absolute;
+  top: -7px;
+  right: 22px;
+  width: 12px;
+  height: 12px;
+  background: var(--card);
+  border-left: 1px solid var(--gold);
+  border-top: 1px solid var(--gold);
+  transform: rotate(45deg);
+}
+.view-hint .vh-t {
+  display: block;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-size: 0.68rem;
+  color: var(--gold);
+  margin-bottom: 0.3rem;
+}
+.view-hint b { font-weight: 500; color: var(--ink); }
+@media (max-width: 640px) {
+  .view-hint { top: 60px; right: 8px; max-width: 215px; font-size: 0.8rem; }
+}
+
+/* Εναλλαγή scroll <-> grid. Το interlude (βίντεο) φαίνεται ΚΑΙ στις δύο προβολές. */
 .catalog-grid { display: none; }
 [data-view="grid"] #catalog { display: none; }
-[data-view="grid"] .interlude { display: none; }
 [data-view="grid"] .catalog-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
