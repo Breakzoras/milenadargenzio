@@ -2,3 +2,5 @@ User-agent: *
 Allow: /
 Allow: /llms.txt
 Allow: /llms-full.txt
+
+Sitemap: https://milenadargenzio.netlify.app/sitemap.xml

@@ -964,68 +964,44 @@
       });
     });
 
-    /* Υπόμνημα (μία φορά) για boomer χρήστες: τι κάνει το κουμπί προβολής */
-    try {
-      if (localStorage.getItem("md-view-hint") !== "1") {
-        const hint = document.createElement("div");
-        hint.className = "view-hint";
-        hint.innerHTML = '<span class="vh-t">Αλλαγή προβολής</span>Δείτε τα νυφικά σε <b>κάρτες</b> ή σε <b>αναλυτική</b> προβολή, πατώντας εδώ.';
-        document.body.appendChild(hint);
-        const place = () => {
-          const r = toggleBtn.getBoundingClientRect();
-          hint.style.top = Math.round(r.bottom + 10) + "px";
-          hint.style.right = Math.round(window.innerWidth - r.right) + "px";
-        };
-        place();
-        const dismiss = () => {
-          hint.classList.remove("show");
-          try { localStorage.setItem("md-view-hint", "1"); } catch (e) {}
-          setTimeout(() => hint.remove(), 500);
-        };
-        setTimeout(() => { place(); hint.classList.add("show"); }, 1200);
-        hint.addEventListener("click", dismiss);
-        toggleBtn.addEventListener("click", dismiss, { once: true });
-        // Μη ενοχλητικό: φεύγει μόλις ο χρήστης κάνει οτιδήποτε (scroll/κλικ/πλήκτρο) + σύντομο safety
-        ["scroll", "pointerdown", "keydown"].forEach((ev) =>
-          window.addEventListener(ev, dismiss, { once: true, passive: true })
-        );
-        setTimeout(dismiss, 6000);
-      }
-    } catch (e) {}
+    /* Hero badge "Ιδιωτική διάθεση στοκ" -> κουμπί που πάει στον πρώτο κωδικό (01) */
+    const heroBadge = document.getElementById("heroBadge");
+    if (heroBadge) {
+      heroBadge.addEventListener("click", () => {
+        const target = root.dataset.view === "grid" ? grid : catalog;
+        if (!target) return;
+        const y = target.getBoundingClientRect().top + window.scrollY - 70;
+        window.scrollTo({ top: Math.max(0, y), behavior: "smooth" });
+      });
+    }
+
+    /* Υπόμνημα για το κουμπί προβολής: εμφανίζεται on hover/focus (boomer-friendly) */
+    (function setupViewHint() {
+      const hint = document.createElement("div");
+      hint.className = "view-hint";
+      hint.id = "viewHint";
+      hint.setAttribute("role", "tooltip");
+      hint.innerHTML = '<span class="vh-t">Αλλαγή προβολής</span>Δείτε τα νυφικά σε <b>κάρτες</b> ή σε <b>αναλυτική</b> προβολή, πατώντας εδώ.';
+      document.body.appendChild(hint);
+      toggleBtn.setAttribute("aria-describedby", "viewHint");
+      const place = () => {
+        const r = toggleBtn.getBoundingClientRect();
+        hint.style.top = Math.round(r.bottom + 10) + "px";
+        hint.style.right = Math.round(window.innerWidth - r.right) + "px";
+      };
+      const show = () => { place(); hint.classList.add("show"); };
+      const hide = () => hint.classList.remove("show");
+      toggleBtn.addEventListener("mouseenter", show);
+      toggleBtn.addEventListener("mouseleave", hide);
+      toggleBtn.addEventListener("focus", show);
+      toggleBtn.addEventListener("blur", hide);
+      toggleBtn.addEventListener("click", hide);
+      window.addEventListener("resize", () => { if (hint.classList.contains("show")) place(); }, { passive: true });
+    })();
   })();
 
-  /* ---------- Schema.org JSON-LD ---------- */
-  const ld = {
-    "@context": "https://schema.org",
-    "@type": "ItemList",
-    name: "Milena D'Argenzio, Κατάλογος χειροποίητων νυφικών (ιδιωτική διάθεση στοκ)",
-    description:
-      "Χειροποίητα νυφικά υψηλής ραπτικής από κλειστό κατάστημα της Θεσσαλονίκης. Ιδιωτική πώληση στοκ, ειδικές τιμές για επαγγελματίες του γάμου.",
-    itemListElement: DRESSES.map((d, i) => {
-      const item = {
-        "@type": "Product",
-        name: `Νυφικό ${d.code}: ${d.title}`,
-        description: d.blurb,
-        sku: d.code,
-      };
-      if (d.retail != null) {
-        item.offers = {
-          "@type": "Offer",
-          price: d.retail,
-          priceCurrency: "EUR",
-          availability: "https://schema.org/InStock",
-          itemCondition: "https://schema.org/NewCondition",
-        };
-      }
-      return { "@type": "ListItem", position: i + 1, item };
-    }),
-  };
-  const script = document.createElement("script");
-  script.type = "application/ld+json";
-  script.textContent = JSON.stringify(ld);
-  document.head.appendChild(script);
-
-  /* ---------- Υπενθύμιση config ---------- */
+  /* ---------- Υπενθύμιση config ----------
+     (Το Schema.org JSON-LD ζει πλέον στατικά στο index.html, χωρίς τιμές.) */
   if (CONFIG.phone.includes("X") || CONFIG.email.includes("example")) {
     console.warn(
       "Milena D'Argenzio: Συμπληρώστε email/phone στο data.js πριν το deploy."

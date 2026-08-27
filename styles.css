@@ -283,6 +283,14 @@ body {
   letter-spacing: 0.32em;
   text-transform: uppercase;
   color: var(--ink);
+  background: transparent;
+  cursor: pointer;
+  transition: color 0.3s, border-color 0.3s, background 0.3s;
+}
+.hero-badge:hover,
+.hero-badge:focus-visible {
+  border-color: var(--gold);
+  color: var(--gold);
 }
 
 .scroll-cue {
@@ -1261,11 +1269,11 @@ body {
 @media (max-width: 640px) {
   html { font-size: 17px; }
 
-  /* Header συμπαγής, χωράει άνετα σε κάθε κινητό */
-  .site-header { gap: 0.5rem; padding: 0.7rem 1rem; }
-  .wordmark { font-size: 1.35rem; }
-  .header-actions { gap: 0.45rem; }
-  .btn-ghost { padding: 0.4rem 0.95rem; font-size: 0.72rem; letter-spacing: 0.1em; }
+  /* Header συμπαγής, χωράει άνετα σε κάθε κινητό (μία σειρά, χωρίς κόψιμο) */
+  .site-header { gap: 0.4rem; padding: 0.7rem 0.8rem; padding-top: max(0.7rem, env(safe-area-inset-top)); }
+  .wordmark { font-size: 1.1rem; }
+  .header-actions { gap: 0.4rem; }
+  .btn-ghost { padding: 0.4rem 0.66rem; font-size: 0.68rem; letter-spacing: 0.05em; }
   .theme-toggle { width: 44px; height: 44px; }
 
   /* Hero: πιο μαζεμένο, ο τίτλος χωράει χωρίς οριζόντιο scroll */
@@ -1331,11 +1339,21 @@ body {
 
 /* Πολύ μικρά κινητά (<=360px) */
 @media (max-width: 360px) {
-  .wordmark { font-size: 1.2rem; }
-  .btn-ghost { padding: 0.4rem 0.7rem; font-size: 0.64rem; letter-spacing: 0.06em; }
+  .site-header { padding: 0.7rem 0.55rem; padding-top: max(0.7rem, env(safe-area-inset-top)); }
+  .header-actions { gap: 0.32rem; }
+  .wordmark { font-size: 1.0rem; }
+  .btn-ghost { padding: 0.36rem 0.52rem; font-size: 0.6rem; letter-spacing: 0.03em; }
   .hero-title { font-size: clamp(2rem, 12.5vw, 2.6rem); }
   /* Το fab κρατάει σύντομη ετικέτα, ΔΕΝ γίνεται icon-only (να εξηγεί τι είναι) */
   .likes-fab { font-size: 0.68rem; padding: 0.4rem 0.8rem; letter-spacing: 0.06em; }
+}
+
+/* Πολύ στενά κινητά (<=340px): ακόμα πιο συμπαγές header, χωρίς κόψιμο */
+@media (max-width: 340px) {
+  .site-header { padding: 0.6rem 0.45rem; padding-top: max(0.6rem, env(safe-area-inset-top)); }
+  .header-actions { gap: 0.28rem; }
+  .wordmark { font-size: 0.92rem; }
+  .btn-ghost { padding: 0.34rem 0.44rem; font-size: 0.56rem; letter-spacing: 0.02em; }
 }
 
 /* ---------- Reduced motion ---------- */
@@ -1390,7 +1408,7 @@ body {
   opacity: 0;
   transform: translateY(-6px);
   transition: opacity 0.45s, transform 0.45s;
-  cursor: pointer;
+  pointer-events: none;
 }
 .view-hint.show { opacity: 1; transform: none; }
 .view-hint::before {
