@@ -48,6 +48,16 @@
 
   const telHref = () => `tel:${CONFIG.phone.replace(/\s/g, "")}`;
 
+  /* ---------- Μετρήσεις Google Analytics ----------
+     Στέλνει γεγονός μόνο αν υπάρχει το gtag. Ποτέ δεν σπάει τη σελίδα. */
+  function track(name, params) {
+    try {
+      if (typeof window.gtag === "function") window.gtag("event", name, params || {});
+    } catch (e) {
+      /* σιωπηλά: η μέτρηση δεν πρέπει ποτέ να χαλάσει την εμπειρία */
+    }
+  }
+
   /* ---------- Toast ---------- */
   const toastEl = document.getElementById("toast");
   let toastTimer = null;
@@ -125,6 +135,8 @@
       likes.push(code);
       saveLikes();
       syncLikeButton(code);
+      /* Αποθήκευσε νυφικό στη λίστα του: το ισχυρότερο σήμα ενδιαφέροντος πριν την επικοινωνία. */
+      track("save_dress", { dress_code: code, list_size: likes.length });
       toast(`Ο κωδικός ${code} αποθηκεύτηκε. Δείτε τη λίστα σας κάτω δεξιά.`);
     }
   }
@@ -143,7 +155,9 @@
   }
 
   /* ---------- Κουμπιά επικοινωνίας (click-to-reveal) ---------- */
-  function revealButton(label, value, href) {
+  function revealButton(label, value, href, context) {
+    const method = href.indexOf("tel:") === 0 ? "phone" : "email";
+    const where = context || "catalog";
     const btn = document.createElement("button");
     btn.type = "button";
     btn.className = "btn";
@@ -152,10 +166,16 @@
     btn.addEventListener(
       "click",
       () => {
+        /* Βήμα 1: ζήτησε να δει το τηλέφωνο ή το email. Ισχυρό σήμα ενδιαφέροντος. */
+        track("contact_reveal", { method: method, context: where });
         const a = document.createElement("a");
         a.className = "btn btn-fill";
         a.href = href;
         a.textContent = value;
+        /* Βήμα 2: πάτησε τον ίδιο τον αριθμό ή το email. Πραγματική επικοινωνία. */
+        a.addEventListener("click", () => {
+          track("contact_click", { method: method, context: where });
+        });
         btn.replaceWith(a);
         a.focus();
       },
@@ -179,8 +199,8 @@
     const row = document.createElement("div");
     row.className = "cta-row";
     const subject = encodeURIComponent(CONFIG.emailSubject.replace("{code}", code));
-    row.appendChild(revealButton("Τηλέφωνο", CONFIG.phone, telHref()));
-    row.appendChild(revealButton("Email", CONFIG.email, `mailto:${CONFIG.email}?subject=${subject}`));
+    row.appendChild(revealButton("Τηλέφωνο", CONFIG.phone, telHref(), `dress_${code}`));
+    row.appendChild(revealButton("Email", CONFIG.email, `mailto:${CONFIG.email}?subject=${subject}`, `dress_${code}`));
     wrap.appendChild(row);
     return wrap;
   }
@@ -480,8 +500,8 @@
   (function buildOutroCta() {
     const row = document.getElementById("outroCta");
     const subject = encodeURIComponent("Ενδιαφέρον για τον κατάλογο - Milena D'Argenzio");
-    row.appendChild(revealButton("Τηλέφωνο", CONFIG.phone, telHref()));
-    row.appendChild(revealButton("Email", CONFIG.email, `mailto:${CONFIG.email}?subject=${subject}`));
+    row.appendChild(revealButton("Τηλέφωνο", CONFIG.phone, telHref(), "outro"));
+    row.appendChild(revealButton("Email", CONFIG.email, `mailto:${CONFIG.email}?subject=${subject}`, "outro"));
   })();
 
   /* ---------- Ευρετήριο ---------- */
@@ -627,9 +647,9 @@
     const body = encodeURIComponent(
       `Καλησπέρα σας.\n\nΕίδα τον κατάλογο Milena D'Argenzio και ενδιαφέρομαι για τα νυφικά με κωδικούς: ${likes.join(", ")}.\n\nΠαρακαλώ ενημερώστε με για τις τιμές επαγγελματία και τη διαθεσιμότητα.\n\nΕυχαριστώ.`
     );
-    actions.appendChild(revealButton("Τηλέφωνο", CONFIG.phone, telHref()));
+    actions.appendChild(revealButton("Τηλέφωνο", CONFIG.phone, telHref(), "my_list"));
     actions.appendChild(
-      revealButton("Αποστολή με Email", CONFIG.email, `mailto:${CONFIG.email}?subject=${subject}&body=${body}`)
+      revealButton("Αποστολή με Email", CONFIG.email, `mailto:${CONFIG.email}?subject=${subject}&body=${body}`, "my_list")
     );
     summary.appendChild(actions);
     likesBody.appendChild(summary);
@@ -637,6 +657,7 @@
 
   likesFab.addEventListener("click", () => {
     renderLikesDialog();
+    track("open_my_list", { list_size: likes.length });
     likesDialog.showModal();
   });
   document.getElementById("likesClose").addEventListener("click", () => likesDialog.close());
@@ -933,6 +954,8 @@
       dmBody.appendChild(info);
 
       syncLikeButton(d.code);
+      /* Άνοιξε την καρτέλα ενός νυφικού: δείχνει ποια κομμάτια τραβάνε το βλέμμα. */
+      track("view_dress", { dress_code: d.code });
       if (!modal.open) modal.showModal();
       dmBody.scrollTop = 0;
     }
