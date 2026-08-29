@@ -907,6 +907,7 @@
           const tb = document.createElement("button");
           tb.type = "button";
           tb.className = "dm-thumb" + (pi === 0 ? " active" : "");
+          tb.setAttribute("aria-label", `Φωτογραφία ${pi + 1} από ${gallery.length}`);
           const ti = document.createElement("img");
           ti.src = src; ti.alt = ""; ti.loading = "lazy"; ti.decoding = "async";
           tb.appendChild(ti);
