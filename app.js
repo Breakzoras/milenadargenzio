@@ -669,11 +669,27 @@
      Το `viber://` άνοιγμα δουλεύει μόνο σε συσκευή που έχει την εφαρμογή.
      Όταν λείπει, ο browser αγνοεί σιωπηλά το κλικ και ο επισκέπτης μένει
      να κοιτάει. Το μετράμε έμμεσα: αν η σελίδα παραμείνει μπροστά μετά από
-     λίγο, καμία εφαρμογή δεν πήρε τη σκυτάλη, οπότε το λέμε ανοιχτά. */
+     λίγο, καμία εφαρμογή δεν πήρε τη σκυτάλη, οπότε το λέμε ανοιχτά.
+
+     Σε υπολογιστή το δείχνουμε ΠΑΝΤΑ: το Viber Desktop ανοίγει κανονικά,
+     όμως συχνά απαντά «No connectivity» αντί να ανοίξει τη συνομιλία, και
+     αυτό η σελίδα δεν μπορεί να το δει. Ο αριθμός μένει έτσι πάντα στα
+     χέρια του επισκέπτη. */
   const viberFab = document.getElementById("viberFab");
   if (viberFab) {
+    const isTouchDevice =
+      (window.matchMedia && window.matchMedia("(pointer: coarse)").matches) ||
+      navigator.maxTouchPoints > 0;
+
     viberFab.addEventListener("click", () => {
       track("contact_click", { method: "viber", context: "fab" });
+
+      if (!isTouchDevice) {
+        setTimeout(() => {
+          toast("Ανοίγει η συνομιλία στο Viber. Από υπολογιστή μπορεί να χρειαστεί η εφαρμογή Viber Desktop. Ο αριθμός μας: 694 726 2433.");
+        }, 900);
+        return;
+      }
 
       let leftPage = false;
       const markLeft = () => { leftPage = true; };
