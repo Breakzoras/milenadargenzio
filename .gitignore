@@ -1,3 +1,7 @@
 ﻿Thumbs.db
 .DS_Store
 *.log
+
+# Τοπικά αρχεία εργαλείων, δεν ανήκουν στο site
+.omc/
+.impeccable/
