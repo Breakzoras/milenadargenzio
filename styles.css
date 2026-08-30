@@ -880,12 +880,48 @@ body {
   border-color: var(--line);
 }
 
-/* ---------- Floating "Η λίστα μου" ---------- */
-.likes-fab {
+/* ---------- Κουμπιά γωνίας: Viber + "Η λίστα μου" ----------
+   Μία flex σειρά κρατάει και τα δύο, οπότε το πλάτος του ενός δεν
+   σκεπάζει ποτέ το άλλο, όσο κι αν αλλάξει το κείμενο ή ο μετρητής. */
+.fab-stack {
   position: fixed;
   right: max(1.2rem, env(safe-area-inset-right));
   bottom: max(1.2rem, env(safe-area-inset-bottom));
   z-index: 20;
+  display: flex;
+  align-items: flex-end;
+  gap: 0.6rem;
+}
+
+/* Στρογγυλό, μόνο το σήμα του Viber. Το όνομα ζει στο aria-label. */
+.viber-fab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 50px;
+  height: 50px;
+  padding: 0;
+  border: 1px solid #7360f2;
+  border-radius: 50%;
+  background: #7360f2;
+  color: #fff;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  transition: background 0.3s, border-color 0.3s, transform 0.3s;
+}
+.viber-fab svg { flex-shrink: 0; }
+.viber-fab:hover,
+.viber-fab:focus-visible {
+  background: #5b48d8;
+  border-color: #5b48d8;
+  color: #fff;
+  transform: scale(1.06);
+}
+
+/* ---------- Floating "Η λίστα μου" ---------- */
+.likes-fab {
   display: inline-flex;
   align-items: center;
   gap: 0.55rem;
@@ -1346,6 +1382,8 @@ body {
   .hero-title { font-size: clamp(2rem, 12.5vw, 2.6rem); }
   /* Το fab κρατάει σύντομη ετικέτα, ΔΕΝ γίνεται icon-only (να εξηγεί τι είναι) */
   .likes-fab { font-size: 0.68rem; padding: 0.4rem 0.8rem; letter-spacing: 0.06em; }
+  .viber-fab { width: 46px; height: 46px; }
+  .fab-stack { gap: 0.45rem; }
 }
 
 /* Πολύ στενά κινητά (<=340px): ακόμα πιο συμπαγές header, χωρίς κόψιμο */
@@ -1354,6 +1392,9 @@ body {
   .header-actions { gap: 0.28rem; }
   .wordmark { font-size: 0.92rem; }
   .btn-ghost { padding: 0.34rem 0.44rem; font-size: 0.56rem; letter-spacing: 0.02em; }
+  /* Σε πολύ στενή οθόνη μικραίνει λίγο ακόμα, ώστε να μείνει καθαρή
+     απόσταση από το «Η λίστα μου» χωρίς να χάσει το μέγεθος αφής. */
+  .viber-fab { width: 44px; height: 44px; }
 }
 
 /* ---------- Reduced motion ---------- */

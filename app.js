@@ -665,6 +665,33 @@
     if (e.target === likesDialog) likesDialog.close();
   });
 
+  /* ---------- Κουμπί Viber ----------
+     Το `viber://` άνοιγμα δουλεύει μόνο σε συσκευή που έχει την εφαρμογή.
+     Όταν λείπει, ο browser αγνοεί σιωπηλά το κλικ και ο επισκέπτης μένει
+     να κοιτάει. Το μετράμε έμμεσα: αν η σελίδα παραμείνει μπροστά μετά από
+     λίγο, καμία εφαρμογή δεν πήρε τη σκυτάλη, οπότε το λέμε ανοιχτά. */
+  const viberFab = document.getElementById("viberFab");
+  if (viberFab) {
+    viberFab.addEventListener("click", () => {
+      track("contact_click", { method: "viber", context: "fab" });
+
+      let leftPage = false;
+      const markLeft = () => { leftPage = true; };
+      document.addEventListener("visibilitychange", markLeft);
+      window.addEventListener("blur", markLeft);
+      window.addEventListener("pagehide", markLeft);
+
+      setTimeout(() => {
+        document.removeEventListener("visibilitychange", markLeft);
+        window.removeEventListener("blur", markLeft);
+        window.removeEventListener("pagehide", markLeft);
+        if (!leftPage && !document.hidden) {
+          toast("Το κουμπί ανοίγει συνομιλία μέσα στην εφαρμογή Viber. Χρειάζεται να είναι εγκατεστημένη στη συσκευή σας. Εναλλακτικά καλέστε στο 694 726 2433.");
+        }
+      }, 1800);
+    });
+  }
+
   /* ---------- Tutorial (μία φορά) ---------- */
   const tutorialDialog = document.getElementById("tutorialDialog");
   const tutorialKey = "md-tutorial-seen";
