@@ -248,6 +248,8 @@ body {
 }
 
 .hero-nyfika {
+  display: block;
+  font-weight: 400;
   font-family: var(--font-display);
   font-size: clamp(1.05rem, 2.2vw, 1.45rem);
   letter-spacing: 0.55em;

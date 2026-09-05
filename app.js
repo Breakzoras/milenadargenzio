@@ -5,6 +5,20 @@
 
 (async function () {
   "use strict";
+// Περιγραφικό alt για τη Google Εικόνες: σιλουέτα + ύφασμα + μέγεθος + πόλη.
+function altFor(d) {
+  if (!d) return "Νυφικό";
+  const det = d.details || {};
+  const sil = (det["Σιλουέτα"] || "").trim();
+  const fab = (det["Ύφασμα"] || "").split(/[,(]/)[0].trim();
+  const bits = ["Νυφικό " + d.code + ": " + d.title];
+  if (sil) bits.push("σιλουέτα " + sil.toLowerCase());
+  if (fab) bits.push(fab.toLowerCase());
+  bits.push("μέγεθος Medium, Θεσσαλονίκη");
+  return bits.join(", ");
+}
+
+
 
   /* ---------- Θέμα (dark/light) ---------- */
   const root = document.documentElement;
@@ -302,7 +316,7 @@
 
   function lbRender() {
     lbImage.src = lbList[lbIndex];
-    lbImage.alt = `Νυφικό ${lbDress.code}: ${lbDress.title}`;
+    lbImage.alt = altFor(lbDress);
     const multi = lbList.length > 1;
     lbCaption.replaceChildren(buildLbTag(lbDress, lbIndex, lbList.length));
     lbPrev.hidden = !multi;
@@ -382,7 +396,7 @@
     frame.setAttribute("aria-label", `Άνοιγμα φωτογραφίας σε πλήρη οθόνη, νυφικό ${d.code}`);
     const img = document.createElement("img");
     img.src = gallery[0];
-    img.alt = `Νυφικό ${d.code}: ${d.title}`;
+    img.alt = altFor(d);
     img.loading = i === 0 ? "eager" : "lazy";
     img.decoding = "async";
     frame.appendChild(img);
@@ -908,7 +922,7 @@
       ph.className = "gc-photo";
       const img = document.createElement("img");
       img.src = firstPhoto(d, i);
-      img.alt = `Νυφικό ${d.code}: ${d.title}`;
+      img.alt = altFor(d);
       img.loading = "lazy";
       img.decoding = "async";
       ph.appendChild(img);
@@ -939,7 +953,7 @@
       main.setAttribute("aria-label", "Άνοιγμα φωτογραφίας σε πλήρη οθόνη");
       const mainImg = document.createElement("img");
       mainImg.src = gallery[0];
-      mainImg.alt = `Νυφικό ${d.code}: ${d.title}`;
+      mainImg.alt = altFor(d);
       main.appendChild(mainImg);
       main.addEventListener("click", () => openLightbox(d, gallery, active));
       gWrap.appendChild(main);
