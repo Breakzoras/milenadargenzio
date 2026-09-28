@@ -1033,6 +1033,17 @@ function altFor(d) {
     let view = "grid";
     try { if (localStorage.getItem(VIEW_KEY) === "scroll") view = "scroll"; } catch (e) {}
     applyView(view);
+
+    /* Link ανά νυφικό: .../#kod-005 ανοίγει κατευθείαν την καρτέλα του (για απαντήσεις σε μηνύματα) */
+    function openFromHash() {
+      const m = /^#kod-(\w+)$/.exec(location.hash);
+      if (!m) return;
+      const i = DRESSES.findIndex((d) => d.code === m[1]);
+      if (i >= 0) openDressModal(DRESSES[i], i);
+    }
+    openFromHash();
+    window.addEventListener("hashchange", openFromHash);
+
     toggleBtn.addEventListener("click", () => {
       const next = root.dataset.view === "grid" ? "scroll" : "grid";
       try { localStorage.setItem(VIEW_KEY, next); } catch (e) {}
