@@ -291,10 +291,11 @@ function dressPageHtml(d, idx) {
   const next = list[(idx + 1) % total];
   const name = productName(d);
 
-  const title = "Νυφικό " + d.code + ": " + d.title + (hasPrice(d) ? ", " + priceSp(d) : "") + " | Στοκ Θεσσαλονίκη";
+  /* Η τιμή μπαίνει νωρίς: η Google κόβει τον τίτλο γύρω στους 60 χαρακτήρες και την περιγραφή στους 160. */
+  const title = "Νυφικό " + d.code + (hasPrice(d) ? ", " + priceSp(d) : "") + ": " + d.title + " | Θεσσαλονίκη";
   const desc =
-    truncate(firstSentence(d.blurb || d.title), 105) +
-    " Καινούργιο, αφόρετο, μέγεθος Medium" + (hasPrice(d) ? ", " + priceSp(d) : "") + ". Πρόβα στη Θεσσαλονίκη.";
+    truncate(firstSentence(d.blurb || d.title), 82) +
+    " Καινούργιο, αφόρετο, μέγεθος Medium" + (hasPrice(d) ? ", " + priceSp(d) : "") + ". Πρόβα στη Θεσσαλονίκη. Κωδ. " + d.code + ".";
 
   const ogImage = cover ? photoUrl(cover) : SITE + "/og-cover.jpg";
   const ogSize = cover ? dims.get(cover) : { width: 1200, height: 630 };
