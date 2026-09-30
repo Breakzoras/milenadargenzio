@@ -1,71 +1,83 @@
 # Milena D'Argenzio - Atelier Lookbook
 
-Στατικός κατάλογος νυφικών (ιδιωτική διάθεση στοκ). Καθαρό HTML/CSS/JS, χωρίς build step, χωρίς dependencies.
+Στατικός κατάλογος νυφικών (ιδιωτική διάθεση στοκ). Καθαρό HTML/CSS/JS, χωρίς dependencies.
+Το Netlify δημοσιεύει τον φάκελο όπως είναι, χωρίς build step. Το `build.js` τρέχει τοπικά, με το χέρι.
 
 ## Δομή
 
 ```
 milena-dargenzio/
-  index.html      Η σελίδα (hero, story, catalog, ευρετήριο, footer)
-  styles.css      Όλο το styling (light + dark θέμα)
-  app.js          Rendering καταλόγου, ευρετήριο, theme toggle, schema.org
-  data.js         CONFIG (επικοινωνία) + DRESSES (τα νυφικά)
-  photos/         Φωτογραφίες ανά κωδικό (βλ. παρακάτω)
-  llms.txt        LLM discoverability (σύντομο)
-  llms-full.txt   LLM discoverability (πλήρες)
+  index.html        Η αρχική (hero, story, κάρτες, συχνές ερωτήσεις, footer)
+  styles.css        Όλο το styling (light + dark θέμα), μαζί με τις σελίδες νυφικών
+  app.js            Η αρχική: κάρτες, καρτέλα σε παράθυρο, ευρετήριο, λίστα, theme toggle
+  dress-page.js     Μικρό script για τις σελίδες νυφικών (theme toggle, μετρήσεις)
+  data.json         config (επικοινωνία) + dresses (τα νυφικά). Η μία πηγή αλήθειας
+  build.js          Γράφει τις στατικές σελίδες και τα παράγωγα αρχεία από το data.json
+  nyfiko/<κωδικός>/ Μία σελίδα ανά νυφικό (παράγεται από το build.js)
+  photos/           Φωτογραφίες ανά κωδικό
+  og-cover.jpg      Εικόνα προεπισκόπησης για κοινοποιήσεις (1200x630, από φωτογραφίες της συλλογής)
+  sitemap.xml       Παράγεται από το build.js
+  llms.txt          LLM discoverability (σύντομο)
+  llms-full.txt     LLM discoverability (πλήρες, ο κατάλογος παράγεται από το build.js)
+  netlify.toml      Κεφαλίδες cache και ασφαλείας
   robots.txt
 ```
+
+## Μετά από ΚΑΘΕ αλλαγή στο data.json ή στις φωτογραφίες
+
+```powershell
+node build.js          # γράφει nyfiko/, κάρτες και JSON-LD στο index.html, sitemap.xml, llms-full.txt
+node build.js --check  # επιβεβαίωση: κωδικός εξόδου 0 σημαίνει ότι όλα είναι ενημερωμένα
+```
+
+Το `build.js` αλλάζει στο `index.html` μόνο ό,τι βρίσκεται ανάμεσα στα σχόλια `BUILD:CARDS` και `BUILD:JSONLD`.
+Οι σελίδες `nyfiko/` γράφονται ολόκληρες από το script, οπότε κάθε αλλαγή τους γίνεται στο `build.js`.
 
 ## Πώς προστίθεται νυφικό
 
 1. Φάκελος φωτογραφιών: `photos/<ΚΩΔΙΚΟΣ>/01.jpg, 02.jpg, ...`
    (κατακόρυφες 3:4 ιδανικά, max 1600px μεγάλη πλευρά, JPEG quality 85)
-2. Νέο entry στο `data.js` στον πίνακα `DRESSES`:
+2. Νέο entry στο `data.json`, στον πίνακα `dresses`:
 
-```js
+```json
 {
-  code: "Α-05",
-  title: "Σύντομος τίτλος",
-  blurb: "Περιγραφή 2-4 προτάσεις.",
-  details: { "Μέγεθος": "38", "Ύφασμα": "Μετάξι", "Κατάσταση": "Αφόρετο", "Χρώμα": "Ιβουάρ" },
-  retail: 1900,
-  photos: ["photos/A-05/01.jpg", "photos/A-05/02.jpg"],
-},
+  "code": "034",
+  "title": "Σύντομος τίτλος",
+  "blurb": "Περιγραφή 2-4 προτάσεις.",
+  "details": { "Σιλουέτα": "Α γραμμή", "Ύφασμα": "Σατέν", "Χρώμα": "Ιβουάρ", "Μέγεθος": "Medium" },
+  "retail": 150,
+  "photos": ["photos/034/01.jpg", "photos/034/02.jpg"]
+}
 ```
 
-Αν το `photos` είναι κενό `[]`, εμφανίζεται αυτόματα κομψό placeholder.
+3. `node build.js` και μετά `node build.js --check`.
+4. Όταν αλλάζει το πλήθος ή το εύρος τιμών, ενημερώνονται με το χέρι ο τίτλος, η περιγραφή
+   και οι συχνές ερωτήσεις στο `index.html`, καθώς και το `llms.txt` και η αρχή του `llms-full.txt`.
 
-## Πριν το deploy (ΥΠΟΧΡΕΩΤΙΚΑ)
+Πωλημένο κομμάτι: αφαιρείται από το `dresses` και ξανατρέχει το `build.js`, που σβήνει και τη σελίδα του.
 
-Στο `data.js`, στο `CONFIG`, συμπλήρωσε:
-- `phone`: π.χ. `+306912345678` (E.164, χωρίς κενά)
-- `email`
+## Σύνδεσμοι ανά νυφικό
 
-Τα κουμπιά Τηλέφωνο/Email στο site αποκαλύπτουν το νούμερο/διεύθυνση με το πρώτο κλικ
-(δεν εμφανίζονται πουθενά πριν το κλικ, ήπια προστασία από scrapers).
+- `https://milenadargenzio.netlify.app/#kod-021` ανοίγει την καρτέλα του νυφικού μέσα στην αρχική.
+- `https://milenadargenzio.netlify.app/nyfiko/021/` είναι η δική του σελίδα, με δική της φωτογραφία
+  και τιμή στην προεπισκόπηση όταν κοινοποιείται.
 
 ## Τοπική προεπισκόπηση
-
-Διπλό κλικ στο `index.html`, ή:
 
 ```powershell
 python -m http.server 4750 --directory "C:\Claude Projects\milena-dargenzio"
 # μετά άνοιξε http://localhost:4750
 ```
 
-## Deploy σε Cloudflare Pages (δωρεάν hosting + δωρεάν subdomain)
+## Deploy
 
-1. https://dash.cloudflare.com > Workers & Pages > Create > Pages > "Upload assets"
-2. Όνομα project: `milenadargenzio` (δίνει το URL `milenadargenzio.pages.dev`)
-3. Σύρε ΟΛΟ τον φάκελο `milena-dargenzio` στο upload
-4. Deploy. Το site είναι live σε λίγα δευτερόλεπτα με SSL.
-
-Για κάθε ενημέρωση (νέα νυφικά, sold out): ξανά upload από το ίδιο μενού (Create new deployment).
-
-Αν αργότερα θες δικό σου domain (.com): Pages project > Custom domains > πρόσθεσέ το, χωρίς καμία αλλαγή στον κώδικα.
+Το Netlify δημοσιεύει τη ρίζα του repo σε κάθε push στο `main`. Κάθε push είναι ένα deploy.
+Όταν αλλάζει το `styles.css` ή το `app.js`, αλλάζει και η παράμετρος `?v=` στο `index.html`
+και ξανατρέχει το `build.js`, ώστε να την πάρουν και οι σελίδες νυφικών.
 
 ## Σημειώσεις
 
 - Dark/light theme: αυτόματο από το σύστημα του επισκέπτη + χειροκίνητο toggle (αποθηκεύεται).
-- Πωλημένο κομμάτι: αφαίρεσέ το από το `DRESSES` (ή κρατάμε "sold" badge, μελλοντική προσθήκη).
-- Προσβασιμότητα: 18px βάση, WCAG AA contrast, πλήκτρα 48px, focus rings, reduced motion support.
+- Τα κουμπιά Τηλέφωνο/Email στην αρχική δείχνουν τον αριθμό και τη διεύθυνση με το πρώτο κλικ.
+  Στις σελίδες νυφικών το τηλέφωνο φαίνεται κατευθείαν.
+- Προσβασιμότητα: 18px βάση, υψηλή αντίθεση, πλήκτρα 48px, focus rings, reduced motion support.

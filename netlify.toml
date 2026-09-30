@@ -1,5 +1,28 @@
 # Milena D'Argenzio - Netlify config
-# Στατικό site, χωρίς build step.
+# Στατικό site, χωρίς build step στο Netlify.
+# Οι σελίδες nyfiko/<κωδικός>/ γράφονται τοπικά με «node build.js» και ανεβαίνουν έτοιμες.
 
 [build]
   publish = "."
+
+# Φωτογραφίες και βίντεο: 7 ημέρες στη μνήμη του browser.
+# Τα ονόματα αρχείων ξαναχρησιμοποιούνται όταν αλλάζει μια φωτογραφία, άρα μια νέα
+# φωτογραφία μπορεί να χρειαστεί έως 7 ημέρες για να φανεί σε επισκέπτη που ξαναέρχεται.
+[[headers]]
+  for = "/photos/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
+
+[[headers]]
+  for = "/video/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
+
+# Βασικές κεφαλίδες ασφαλείας για όλες τις σελίδες.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    X-Frame-Options = "SAMEORIGIN"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"

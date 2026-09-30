@@ -33,6 +33,29 @@ function altFor(d) {
 
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  /* ---------- Βίντεο interlude: ξεκινά όταν πλησιάζει στην οθόνη ----------
+     Πριν, το autoplay με preload="auto" κατέβαζε 1,5 MB σε κάθε επίσκεψη, ακόμα κι όταν
+     ο επισκέπτης έμενε στην κορυφή της σελίδας. Τώρα η αφίσα (poster) γεμίζει το κάδρο
+     και το βίντεο κατεβαίνει μόλις το κάδρο φτάσει μία οθόνη μακριά. Ο παρατηρητής μένει
+     ενεργός, ώστε αν ο browser σταματήσει το βίντεο να ξαναξεκινήσει στο επόμενο πέρασμα. */
+  (function lazyInterludeVideo() {
+    const video = document.getElementById("interludeBg");
+    if (!video) return;
+    const start = () => {
+      video.preload = "auto";
+      const p = video.play();
+      if (p && typeof p.catch === "function") p.catch(() => {});
+    };
+    if (!("IntersectionObserver" in window)) { start(); return; }
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (video.paused && entries.some((e) => e.isIntersecting)) start();
+      },
+      { rootMargin: "100% 0px" }
+    );
+    io.observe(video.parentElement || video);
+  })();
+
   /* ---------- Φόρτωση δεδομένων από data.json ---------- */
   let CONFIG = {};
   let DRESSES = [];
@@ -857,21 +880,21 @@ function altFor(d) {
     drift();
   }
 
-  /* ---------- Prefetch-on-idle (φωτογραφίες) ----------
+  /* ---------- Prefetch-on-idle (μόνο τα εξώφυλλα) ----------
      Το loading="lazy" φορτώνει μόλις πλησιάσει η φωτό -> "pop-in" στο
      γρήγορο scroll. Εδώ, ΑΦΟΥ φορτώσει η σελίδα και ο browser είναι
-     αδρανής, ζεσταίνουμε σιγά-σιγά (σειριακά, όχι 47 ταυτόχρονα) την
-     cache: πρώτα τα εξώφυλλα κάθε νυφικού, μετά τις υπόλοιπες. Έτσι στο
-     scroll είναι ήδη έτοιμες, χωρίς να μπλοκάρει το αρχικό render. */
+     αδρανής, ζεσταίνουμε σιγά-σιγά (σειριακά, μία τη φορά) την cache με
+     το εξώφυλλο κάθε νυφικού, δηλαδή ό,τι δείχνουν οι κάρτες.
+     Οι υπόλοιπες φωτογραφίες (50 από τις 83, περίπου 8 MB) κατεβαίνουν
+     πλέον μόνο όταν ο επισκέπτης ανοίξει το νυφικό. Με ενεργή την
+     «Εξοικονόμηση δεδομένων» ή σε πολύ αργή σύνδεση μένουμε στο lazy. */
   (function prefetchOnIdle() {
-    const covers = [];
-    const extras = [];
-    DRESSES.forEach((d, i) => {
-      if (!d.photos || !d.photos.length) return;
-      covers.push(d.photos[0]);
-      for (let k = 1; k < d.photos.length; k++) extras.push(d.photos[k]);
+    const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    if (conn && (conn.saveData || /(^|-)2g$/.test(conn.effectiveType || ""))) return;
+    const queue = [];
+    DRESSES.forEach((d) => {
+      if (d.photos && d.photos.length) queue.push(d.photos[0]);
     });
-    const queue = covers.concat(extras);
     let idx = 0;
     function next() {
       if (idx >= queue.length) return;
@@ -912,12 +935,20 @@ function altFor(d) {
     const VIEW_KEY = "md-view";
     const root = document.documentElement;
 
-    /* --- Κάρτες: φωτό + κωδικός + τίτλος --- */
+    /* --- Κάρτες: φωτό + κωδικός + τίτλος + τιμή ---
+       Το index.html έχει ήδη τις ίδιες κάρτες γραμμένες στατικά από το build.js, για τις
+       μηχανές αναζήτησης. Εδώ ξαναχτίζονται ίδιες, με το κλικ να ανοίγει την καρτέλα σε παράθυρο.
+       Το href οδηγεί στη στατική σελίδα του νυφικού: το ακολουθούν οι μηχανές αναζήτησης και
+       το «άνοιγμα σε νέα καρτέλα» (Ctrl, Shift, μεσαίο κλικ). */
+    grid.replaceChildren();
     DRESSES.forEach((d, i) => {
-      const card = document.createElement("button");
-      card.type = "button";
+      const card = document.createElement("a");
       card.className = "grid-card";
-      card.setAttribute("aria-label", `Λεπτομέρειες, νυφικό ${d.code}: ${d.title}`);
+      card.href = `/nyfiko/${encodeURIComponent(d.code)}/`;
+      card.setAttribute(
+        "aria-label",
+        `Λεπτομέρειες, νυφικό ${d.code}: ${d.title}` + (d.retail != null ? `, ${euro.format(d.retail)}` : "")
+      );
       const ph = document.createElement("div");
       ph.className = "gc-photo";
       const img = document.createElement("img");
@@ -930,12 +961,21 @@ function altFor(d) {
       const codeEl = document.createElement("p");
       codeEl.className = "gc-code";
       codeEl.textContent = `Κωδικός ${d.code}`;
-      const titleEl = document.createElement("p");
+      const titleEl = document.createElement("h3");
       titleEl.className = "gc-title";
       titleEl.textContent = d.title;
+      const priceEl = document.createElement("p");
+      priceEl.className = "gc-price";
+      priceEl.textContent = d.retail != null ? euro.format(d.retail) : "Διαθέσιμο";
       card.appendChild(codeEl);
       card.appendChild(titleEl);
-      card.addEventListener("click", () => openDressModal(d, i));
+      card.appendChild(priceEl);
+      card.addEventListener("click", (e) => {
+        /* Με πλήκτρο τροποποίησης ο browser ανοίγει κανονικά τη στατική σελίδα σε νέα καρτέλα. */
+        if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+        e.preventDefault();
+        openDressModal(d, i);
+      });
       grid.appendChild(card);
     });
 
@@ -1093,10 +1133,12 @@ function altFor(d) {
   })();
 
   /* ---------- Υπενθύμιση config ----------
-     (Το Schema.org JSON-LD ζει πλέον στατικά στο index.html, χωρίς τιμές.) */
+     (Το Schema.org JSON-LD ζει στατικά στο index.html και στις σελίδες nyfiko/<κωδικός>/,
+     με τις τιμές του data.json. Το γράφει το build.js: μετά από κάθε αλλαγή στο data.json
+     τρέχει «node build.js».) */
   if (CONFIG.phone.includes("X") || CONFIG.email.includes("example")) {
     console.warn(
-      "Milena D'Argenzio: Συμπληρώστε email/phone στο data.js πριν το deploy."
+      "Milena D'Argenzio: Συμπληρώστε email/phone στο data.json πριν το deploy."
     );
   }
 })();

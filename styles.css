@@ -228,7 +228,14 @@ body {
 
 .hero-inner { max-width: 60rem; }
 
+/* Το H1 αγκαλιάζει τη γραμμή με τις λέξεις αναζήτησης και το όνομα του ατελιέ.
+   Τα δύο span στέκονται ως block, όπως πριν το <p> και το <h1>: η όψη μένει ίδια. */
+.hero-h1 { font: inherit; }
+.hero-h1 > .hero-overline,
+.hero-h1 > .hero-title { display: block; }
+
 .hero-overline {
+  text-wrap: balance;
   font-family: var(--font-ui);
   font-weight: 400;
   font-size: 0.85rem;
@@ -350,6 +357,19 @@ body {
 }
 .story-text + .story-text { margin-top: 1.4rem; }
 .story-text strong { font-weight: 500; color: var(--accent); }
+
+/* Συχνές ερωτήσεις: πραγματικές επικεφαλίδες (h2 + h3) με την ίδια όψη που είχαν
+   ως <p> και <strong>. */
+h2.story-kicker { font-weight: 400; }
+.faq-q {
+  font: inherit;
+  font-size: clamp(1.15rem, 2vw, 1.4rem);
+  line-height: 1.85;
+  font-weight: 500;
+  color: var(--accent);
+  margin-top: 1.4rem;
+}
+.story-kicker + .faq-q { margin-top: 0; }
 
 .b2b-band {
   max-width: 40rem;
@@ -1503,6 +1523,8 @@ body {
   cursor: pointer;
   font: inherit;
   color: inherit;
+  /* Η κάρτα είναι πλέον σύνδεσμος <a> προς τη σελίδα του νυφικού */
+  text-decoration: none;
   -webkit-tap-highlight-color: transparent;
 }
 .gc-photo {
@@ -1536,6 +1558,14 @@ body {
   font-size: 1.15rem;
   line-height: 1.25;
   color: var(--ink);
+}
+/* Τιμή στην κάρτα: φαίνεται πριν από το κλικ */
+.gc-price {
+  font-family: var(--font-ui);
+  font-size: 1rem;
+  line-height: 1.4;
+  color: var(--ink);
+  margin-top: 0.35rem;
 }
 
 /* Dress modal (πλήρης καρτέλα σε popup) */
@@ -1653,4 +1683,280 @@ body {
   .gc-title { font-size: 1rem; }
   .gc-code { letter-spacing: 0.2em; font-size: 0.6rem; }
   .view-toggle, .theme-toggle { width: 44px; height: 44px; }
+}
+
+/* ============ ΣΤΑΤΙΚΕΣ ΣΕΛΙΔΕΣ ΝΥΦΙΚΩΝ (nyfiko/<κωδικός>/) ============
+   Τις γράφει το build.js και τρέχουν ΧΩΡΙΣ το app.js. Γι' αυτό εδώ μέσα
+   καμία κλάση .reveal, .reveal-wipe, .reveal-code (μένουν αόρατες χωρίς JS).
+   Προσβασιμότητα: κάθε κείμενο από 1rem και πάνω (17 με 18px), τίτλοι 24px+,
+   όλα τα γράμματα σε --ink για υψηλή αντίθεση σε φωτεινό και σκούρο θέμα.
+   Το χρυσό μένει μόνο σε γραμμές και πλαίσια. */
+.dp-page .footer-brand-sub { font-size: 1rem; }
+
+.dp-header {
+  position: sticky;
+  background: var(--header-bg);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--line-soft);
+}
+.theme-toggle[hidden] { display: none; }
+
+.dp-back {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-family: var(--font-ui);
+  font-size: 1rem;
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 5px;
+  text-decoration-color: var(--gold);
+}
+.dp-back:hover { text-decoration-color: var(--ink); }
+
+.dp {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: clamp(1.2rem, 3vw, 2.2rem) clamp(1.1rem, 4vw, 3rem) 4rem;
+}
+
+.dp-crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  font-family: var(--font-ui);
+  font-size: 1rem;
+  color: var(--ink);
+  margin-bottom: 1.6rem;
+}
+.dp-crumbs a {
+  color: var(--ink);
+  text-underline-offset: 5px;
+  text-decoration-color: var(--gold);
+}
+
+.dp-article {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  grid-template-rows: auto 1fr;
+  grid-template-areas:
+    "media head"
+    "media body";
+  column-gap: clamp(1.5rem, 5vw, 4rem);
+  row-gap: 1.4rem;
+  align-items: start;
+}
+.dp-head { grid-area: head; }
+.dp-media { grid-area: media; }
+.dp-body { grid-area: body; }
+
+.dp-code {
+  font-family: var(--font-ui);
+  font-size: 1rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink);
+  margin-bottom: 0.6rem;
+}
+.dp-title {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.9rem, 3.6vw, 3rem);
+  line-height: 1.15;
+  color: var(--ink);
+}
+
+.dp-cover {
+  display: block;
+  border: 2px solid var(--gold);
+  background: var(--bg-c);
+  cursor: zoom-in;
+}
+.dp-cover img,
+.dp-shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+}
+.dp-more {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.8rem;
+  margin-top: 0.8rem;
+}
+.dp-shot {
+  display: block;
+  border: 1px solid var(--line);
+  background: var(--bg-c);
+  cursor: zoom-in;
+}
+.dp-hint {
+  font-family: var(--font-ui);
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--ink);
+  margin-top: 0.9rem;
+}
+
+.dp-price {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.4rem 1rem;
+  margin-bottom: 1.1rem;
+}
+.dp-price-num {
+  font-family: var(--font-display);
+  font-size: 2.3rem;
+  line-height: 1.1;
+  color: var(--ink);
+}
+.dp-price-label {
+  font-family: var(--font-ui);
+  font-size: 1rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.dp-facts {
+  list-style: none;
+  display: grid;
+  gap: 0.45rem;
+  font-size: 1.15rem;
+  line-height: 1.55;
+  color: var(--ink);
+}
+.dp-facts li { position: relative; padding-left: 1.5rem; }
+.dp-facts li::before {
+  content: "";
+  position: absolute;
+  left: 0.15rem;
+  top: 0.62em;
+  width: 7px;
+  height: 7px;
+  border: 1px solid var(--gold);
+  transform: rotate(45deg);
+}
+
+.dp-cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin: 1.6rem 0 0.9rem;
+}
+.dp-cta .btn,
+.dp-links .btn {
+  min-height: 56px;
+  padding: 0.6rem 1.5rem;
+  font-size: 1rem;
+  letter-spacing: 0.08em;
+  line-height: 1.35;
+  text-align: center;
+}
+.dp-help {
+  font-family: var(--font-ui);
+  font-size: 1rem;
+  line-height: 1.55;
+  color: var(--ink);
+}
+.dp-blurb {
+  font-size: 1.2rem;
+  line-height: 1.8;
+  color: var(--ink);
+  margin: 1.8rem 0 0;
+}
+.dp-h2 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 1.6rem;
+  line-height: 1.2;
+  color: var(--ink);
+  margin: 2.2rem 0 1rem;
+}
+.dp-specs {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.7rem 1.8rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--line);
+}
+.dp-specs dt {
+  font-family: var(--font-ui);
+  font-size: 1rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+.dp-specs dd { font-size: 1.15rem; line-height: 1.55; color: var(--ink); }
+
+.dp-nav {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: clamp(2.5rem, 6vw, 4rem);
+  padding-top: 1.6rem;
+  border-top: 1px solid var(--line);
+}
+.dp-nav-link {
+  display: block;
+  padding: 0.9rem 1.1rem;
+  border: 1px solid var(--line);
+  color: var(--ink);
+  text-decoration: none;
+  transition: border-color 0.25s, background 0.25s;
+}
+.dp-nav-link:hover,
+.dp-nav-link:focus-visible { border-color: var(--ink); background: var(--card); }
+.dp-nav-next { text-align: right; }
+.dp-nav-label {
+  display: block;
+  font-family: var(--font-ui);
+  font-size: 1rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.dp-nav-name {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  line-height: 1.3;
+  margin-top: 0.3rem;
+}
+.dp-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.8rem;
+  margin-top: 1.4rem;
+}
+
+.dp-footer-note {
+  font-family: var(--font-ui);
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--ink);
+  max-width: 36rem;
+  margin: 0 auto;
+}
+.dp-footer-note a { color: var(--ink); text-underline-offset: 4px; white-space: nowrap; }
+
+@media (max-width: 800px) {
+  .dp-article {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto;
+    grid-template-areas:
+      "head"
+      "media"
+      "body";
+  }
+  .dp-cta .btn { flex: 1 1 100%; }
+  .dp-links .btn { flex: 1 1 100%; }
+  .dp-specs { grid-template-columns: minmax(0, 1fr); gap: 0.1rem 0; }
+  .dp-specs dt { padding-top: 0.7rem; }
+  .dp-nav { grid-template-columns: minmax(0, 1fr); }
+  .dp-nav-next { text-align: left; }
 }
