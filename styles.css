@@ -1781,6 +1781,10 @@ h2.story-kicker { font-weight: 400; }
   aspect-ratio: 3 / 4;
   object-fit: cover;
 }
+/* The cover shows the whole gown: many covers are tall (1200x3000) and a crop hides the dress. */
+.dp-cover img {
+  object-fit: contain;
+}
 .dp-more {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
