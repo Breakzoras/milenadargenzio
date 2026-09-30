@@ -1096,7 +1096,7 @@ function altFor(d) {
       });
     });
 
-    /* Hero badge "Ιδιωτική διάθεση στοκ" -> κουμπί που πάει στον πρώτο κωδικό (01) */
+    /* Hero badge "Δείτε όλα τα νυφικά" -> κουμπί που πάει στον πρώτο κωδικό (01) */
     const heroBadge = document.getElementById("heroBadge");
     if (heroBadge) {
       heroBadge.addEventListener("click", () => {
