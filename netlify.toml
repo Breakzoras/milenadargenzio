@@ -26,3 +26,112 @@
     Referrer-Policy = "strict-origin-when-cross-origin"
     X-Frame-Options = "SAMEORIGIN"
     Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+
+# Νυφικά εκτός δημόσιας θέας ("hidden": true στο data.json, εντολή 07-10).
+# Οι φωτογραφίες τους μένουν στο repo αλλά δεν σερβίρονται: 404 με τη σελίδα 404.html.
+# Επαναφορά: σβήνεται η σημαία στο data.json, σβήνονται αυτές οι γραμμές, node build.js.
+[[redirects]]
+  from = "/photos/007/*"
+  to = "/404.html"
+  status = 404
+  force = true
+[[redirects]]
+  from = "/photos/008/*"
+  to = "/404.html"
+  status = 404
+  force = true
+[[redirects]]
+  from = "/photos/010/*"
+  to = "/404.html"
+  status = 404
+  force = true
+[[redirects]]
+  from = "/photos/012/*"
+  to = "/404.html"
+  status = 404
+  force = true
+[[redirects]]
+  from = "/photos/014/*"
+  to = "/404.html"
+  status = 404
+  force = true
+[[redirects]]
+  from = "/photos/017/*"
+  to = "/404.html"
+  status = 404
+  force = true
+[[redirects]]
+  from = "/photos/018/*"
+  to = "/404.html"
+  status = 404
+  force = true
+[[redirects]]
+  from = "/photos/019/*"
+  to = "/404.html"
+  status = 404
+  force = true
+[[redirects]]
+  from = "/photos/020/*"
+  to = "/404.html"
+  status = 404
+  force = true
+[[redirects]]
+  from = "/photos/021/*"
+  to = "/404.html"
+  status = 404
+  force = true
+[[redirects]]
+  from = "/photos/022/*"
+  to = "/404.html"
+  status = 404
+  force = true
+[[redirects]]
+  from = "/photos/023/*"
+  to = "/404.html"
+  status = 404
+  force = true
+[[redirects]]
+  from = "/photos/024/*"
+  to = "/404.html"
+  status = 404
+  force = true
+[[redirects]]
+  from = "/photos/025/*"
+  to = "/404.html"
+  status = 404
+  force = true
+[[redirects]]
+  from = "/photos/026/*"
+  to = "/404.html"
+  status = 404
+  force = true
+[[redirects]]
+  from = "/photos/027/*"
+  to = "/404.html"
+  status = 404
+  force = true
+[[redirects]]
+  from = "/photos/028/*"
+  to = "/404.html"
+  status = 404
+  force = true
+[[redirects]]
+  from = "/photos/029/*"
+  to = "/404.html"
+  status = 404
+  force = true
+[[redirects]]
+  from = "/photos/030/*"
+  to = "/404.html"
+  status = 404
+  force = true
+[[redirects]]
+  from = "/photos/031/*"
+  to = "/404.html"
+  status = 404
+  force = true
+[[redirects]]
+  from = "/photos/032/*"
+  to = "/404.html"
+  status = 404
+  force = true

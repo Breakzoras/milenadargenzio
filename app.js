@@ -62,7 +62,7 @@ function altFor(d) {
   try {
     const _data = await fetch("data.json", { cache: "no-store" }).then((r) => r.json());
     CONFIG = _data.config || {};
-    DRESSES = _data.dresses || [];
+    DRESSES = (_data.dresses || []).filter((d) => !d.hidden); // "hidden": true = εκτός δημόσιας θέας
   } catch (e) {
     console.error("Milena D'Argenzio: αποτυχία φόρτωσης data.json", e);
     document.getElementById("catalog").innerHTML =

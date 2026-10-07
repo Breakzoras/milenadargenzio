@@ -111,7 +111,10 @@ function jpegSize(rel) {
 /* ---------- Δεδομένα ---------- */
 const data = JSON.parse(fs.readFileSync(abs("data.json"), "utf8"));
 const config = data.config || {};
-const dresses = (data.dresses || []).slice();
+/* "hidden": true = το νυφικό μένει στο data.json αλλά βγαίνει από τη δημόσια θέα: καμία κάρτα,
+   καμία σελίδα, καμία θέση στο sitemap και στο llms-full.txt. Οι φωτογραφίες του κόβονται
+   με 404 στο netlify.toml. Επαναφορά: σβήνεται η σημαία και ακολουθεί node build.js. */
+const dresses = (data.dresses || []).filter((d) => !d.hidden);
 if (!dresses.length) fail("Το data.json δεν έχει νυφικά.");
 
 const seen = new Set();

@@ -3,11 +3,11 @@
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://milenadargenzio.netlify.app/</loc>
-    <lastmod>2026-09-30</lastmod>
+    <lastmod>2026-10-07</lastmod>
   </url>
   <url>
     <loc>https://milenadargenzio.netlify.app/nyfiko/01/</loc>
-    <lastmod>2026-09-30</lastmod>
+    <lastmod>2026-10-07</lastmod>
     <image:image>
       <image:loc>https://milenadargenzio.netlify.app/photos/01/01.jpg</image:loc>
     </image:image>
@@ -17,7 +17,7 @@
   </url>
   <url>
     <loc>https://milenadargenzio.netlify.app/nyfiko/02/</loc>
-    <lastmod>2026-09-30</lastmod>
+    <lastmod>2026-10-07</lastmod>
     <image:image>
       <image:loc>https://milenadargenzio.netlify.app/photos/02/01.jpg</image:loc>
     </image:image>
@@ -30,7 +30,7 @@
   </url>
   <url>
     <loc>https://milenadargenzio.netlify.app/nyfiko/03/</loc>
-    <lastmod>2026-09-30</lastmod>
+    <lastmod>2026-10-07</lastmod>
     <image:image>
       <image:loc>https://milenadargenzio.netlify.app/photos/03/01.jpg</image:loc>
     </image:image>
@@ -40,7 +40,7 @@
   </url>
   <url>
     <loc>https://milenadargenzio.netlify.app/nyfiko/04/</loc>
-    <lastmod>2026-09-30</lastmod>
+    <lastmod>2026-10-07</lastmod>
     <image:image>
       <image:loc>https://milenadargenzio.netlify.app/photos/04/01.jpg</image:loc>
     </image:image>
@@ -50,7 +50,7 @@
   </url>
   <url>
     <loc>https://milenadargenzio.netlify.app/nyfiko/005/</loc>
-    <lastmod>2026-09-30</lastmod>
+    <lastmod>2026-10-07</lastmod>
     <image:image>
       <image:loc>https://milenadargenzio.netlify.app/photos/005/01.jpg</image:loc>
     </image:image>
@@ -72,7 +72,7 @@
   </url>
   <url>
     <loc>https://milenadargenzio.netlify.app/nyfiko/006/</loc>
-    <lastmod>2026-09-30</lastmod>
+    <lastmod>2026-10-07</lastmod>
     <image:image>
       <image:loc>https://milenadargenzio.netlify.app/photos/006/01.jpg</image:loc>
     </image:image>
@@ -81,28 +81,8 @@
     </image:image>
   </url>
   <url>
-    <loc>https://milenadargenzio.netlify.app/nyfiko/007/</loc>
-    <lastmod>2026-09-30</lastmod>
-    <image:image>
-      <image:loc>https://milenadargenzio.netlify.app/photos/007/01.jpg</image:loc>
-    </image:image>
-    <image:image>
-      <image:loc>https://milenadargenzio.netlify.app/photos/007/02.jpg</image:loc>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://milenadargenzio.netlify.app/nyfiko/008/</loc>
-    <lastmod>2026-09-30</lastmod>
-    <image:image>
-      <image:loc>https://milenadargenzio.netlify.app/photos/008/01.jpg</image:loc>
-    </image:image>
-    <image:image>
-      <image:loc>https://milenadargenzio.netlify.app/photos/008/02.jpg</image:loc>
-    </image:image>
-  </url>
-  <url>
     <loc>https://milenadargenzio.netlify.app/nyfiko/009/</loc>
-    <lastmod>2026-09-30</lastmod>
+    <lastmod>2026-10-07</lastmod>
     <image:image>
       <image:loc>https://milenadargenzio.netlify.app/photos/009/01.jpg</image:loc>
     </image:image>
@@ -114,21 +94,8 @@
     </image:image>
   </url>
   <url>
-    <loc>https://milenadargenzio.netlify.app/nyfiko/010/</loc>
-    <lastmod>2026-09-30</lastmod>
-    <image:image>
-      <image:loc>https://milenadargenzio.netlify.app/photos/010/01.jpg</image:loc>
-    </image:image>
-    <image:image>
-      <image:loc>https://milenadargenzio.netlify.app/photos/010/02.jpg</image:loc>
-    </image:image>
-    <image:image>
-      <image:loc>https://milenadargenzio.netlify.app/photos/010/03.jpg</image:loc>
-    </image:image>
-  </url>
-  <url>
     <loc>https://milenadargenzio.netlify.app/nyfiko/011/</loc>
-    <lastmod>2026-09-30</lastmod>
+    <lastmod>2026-10-07</lastmod>
     <image:image>
       <image:loc>https://milenadargenzio.netlify.app/photos/011/04.jpg</image:loc>
     </image:image>
@@ -143,18 +110,8 @@
     </image:image>
   </url>
   <url>
-    <loc>https://milenadargenzio.netlify.app/nyfiko/012/</loc>
-    <lastmod>2026-09-30</lastmod>
-    <image:image>
-      <image:loc>https://milenadargenzio.netlify.app/photos/012/01.jpg</image:loc>
-    </image:image>
-    <image:image>
-      <image:loc>https://milenadargenzio.netlify.app/photos/012/02.jpg</image:loc>
-    </image:image>
-  </url>
-  <url>
     <loc>https://milenadargenzio.netlify.app/nyfiko/013/</loc>
-    <lastmod>2026-09-30</lastmod>
+    <lastmod>2026-10-07</lastmod>
     <image:image>
       <image:loc>https://milenadargenzio.netlify.app/photos/013/01.jpg</image:loc>
     </image:image>
@@ -163,22 +120,15 @@
     </image:image>
   </url>
   <url>
-    <loc>https://milenadargenzio.netlify.app/nyfiko/014/</loc>
-    <lastmod>2026-09-30</lastmod>
-    <image:image>
-      <image:loc>https://milenadargenzio.netlify.app/photos/014/01.jpg</image:loc>
-    </image:image>
-  </url>
-  <url>
     <loc>https://milenadargenzio.netlify.app/nyfiko/015/</loc>
-    <lastmod>2026-09-30</lastmod>
+    <lastmod>2026-10-07</lastmod>
     <image:image>
       <image:loc>https://milenadargenzio.netlify.app/photos/015/01.jpg</image:loc>
     </image:image>
   </url>
   <url>
     <loc>https://milenadargenzio.netlify.app/nyfiko/016/</loc>
-    <lastmod>2026-09-30</lastmod>
+    <lastmod>2026-10-07</lastmod>
     <image:image>
       <image:loc>https://milenadargenzio.netlify.app/photos/016/01.jpg</image:loc>
     </image:image>
@@ -196,186 +146,8 @@
     </image:image>
   </url>
   <url>
-    <loc>https://milenadargenzio.netlify.app/nyfiko/017/</loc>
-    <lastmod>2026-09-30</lastmod>
-    <image:image>
-      <image:loc>https://milenadargenzio.netlify.app/photos/017/01.jpg</image:loc>
-    </image:image>
-    <image:image>
-      <image:loc>https://milenadargenzio.netlify.app/photos/017/02.jpg</image:loc>
-    </image:image>
-    <image:image>
-      <image:loc>https://milenadargenzio.netlify.app/photos/017/03.jpg</image:loc>
-    </image:image>
-    <image:image>
-      <image:loc>https://milenadargenzio.netlify.app/photos/017/04.jpg</image:loc>
-    </image:image>
-    <image:image>
-      <image:loc>https://milenadargenzio.netlify.app/photos/017/05.jpg</image:loc>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://milenadargenzio.netlify.app/nyfiko/018/</loc>
-    <lastmod>2026-09-30</lastmod>
-    <image:image>
-      <image:loc>https://milenadargenzio.netlify.app/photos/018/01.jpg</image:loc>
-    </image:image>
-    <image:image>
-      <image:loc>https://milenadargenzio.netlify.app/photos/018/02.jpg</image:loc>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://milenadargenzio.netlify.app/nyfiko/019/</loc>
-    <lastmod>2026-09-30</lastmod>
-    <image:image>
-      <image:loc>https://milenadargenzio.netlify.app/photos/019/01.jpg</image:loc>
-    </image:image>
-    <image:image>
-      <image:loc>https://milenadargenzio.netlify.app/photos/019/02.jpg</image:loc>
-    </image:image>
-    <image:image>
-      <image:loc>https://milenadargenzio.netlify.app/photos/019/03.jpg</image:loc>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://milenadargenzio.netlify.app/nyfiko/020/</loc>
-    <lastmod>2026-09-30</lastmod>
-    <image:image>
-      <image:loc>https://milenadargenzio.netlify.app/photos/020/01.jpg</image:loc>
-    </image:image>
-    <image:image>
-      <image:loc>https://milenadargenzio.netlify.app/photos/020/02.jpg</image:loc>
-    </image:image>
-    <image:image>
-      <image:loc>https://milenadargenzio.netlify.app/photos/020/03.jpg</image:loc>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://milenadargenzio.netlify.app/nyfiko/021/</loc>
-    <lastmod>2026-09-30</lastmod>
-    <image:image>
-      <image:loc>https://milenadargenzio.netlify.app/photos/021/01.jpg</image:loc>
-    </image:image>
-    <image:image>
-      <image:loc>https://milenadargenzio.netlify.app/photos/021/02.jpg</image:loc>
-    </image:image>
-    <image:image>
-      <image:loc>https://milenadargenzio.netlify.app/photos/021/03.jpg</image:loc>
-    </image:image>
-    <image:image>
-      <image:loc>https://milenadargenzio.netlify.app/photos/021/04.jpg</image:loc>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://milenadargenzio.netlify.app/nyfiko/022/</loc>
-    <lastmod>2026-09-30</lastmod>
-    <image:image>
-      <image:loc>https://milenadargenzio.netlify.app/photos/022/01.jpg</image:loc>
-    </image:image>
-    <image:image>
-      <image:loc>https://milenadargenzio.netlify.app/photos/022/02.jpg</image:loc>
-    </image:image>
-    <image:image>
-      <image:loc>https://milenadargenzio.netlify.app/photos/022/03.jpg</image:loc>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://milenadargenzio.netlify.app/nyfiko/023/</loc>
-    <lastmod>2026-09-30</lastmod>
-    <image:image>
-      <image:loc>https://milenadargenzio.netlify.app/photos/023/01.jpg</image:loc>
-    </image:image>
-    <image:image>
-      <image:loc>https://milenadargenzio.netlify.app/photos/023/02.jpg</image:loc>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://milenadargenzio.netlify.app/nyfiko/024/</loc>
-    <lastmod>2026-09-30</lastmod>
-    <image:image>
-      <image:loc>https://milenadargenzio.netlify.app/photos/024/01.jpg</image:loc>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://milenadargenzio.netlify.app/nyfiko/025/</loc>
-    <lastmod>2026-09-30</lastmod>
-    <image:image>
-      <image:loc>https://milenadargenzio.netlify.app/photos/025/02.jpg</image:loc>
-    </image:image>
-    <image:image>
-      <image:loc>https://milenadargenzio.netlify.app/photos/025/01.jpg</image:loc>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://milenadargenzio.netlify.app/nyfiko/026/</loc>
-    <lastmod>2026-09-30</lastmod>
-    <image:image>
-      <image:loc>https://milenadargenzio.netlify.app/photos/026/01.jpg</image:loc>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://milenadargenzio.netlify.app/nyfiko/027/</loc>
-    <lastmod>2026-09-30</lastmod>
-    <image:image>
-      <image:loc>https://milenadargenzio.netlify.app/photos/027/01.jpg</image:loc>
-    </image:image>
-    <image:image>
-      <image:loc>https://milenadargenzio.netlify.app/photos/027/02.jpg</image:loc>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://milenadargenzio.netlify.app/nyfiko/028/</loc>
-    <lastmod>2026-09-30</lastmod>
-    <image:image>
-      <image:loc>https://milenadargenzio.netlify.app/photos/028/01.jpg</image:loc>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://milenadargenzio.netlify.app/nyfiko/029/</loc>
-    <lastmod>2026-09-30</lastmod>
-    <image:image>
-      <image:loc>https://milenadargenzio.netlify.app/photos/029/01.jpg</image:loc>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://milenadargenzio.netlify.app/nyfiko/030/</loc>
-    <lastmod>2026-09-30</lastmod>
-    <image:image>
-      <image:loc>https://milenadargenzio.netlify.app/photos/030/01.jpg</image:loc>
-    </image:image>
-    <image:image>
-      <image:loc>https://milenadargenzio.netlify.app/photos/030/02.jpg</image:loc>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://milenadargenzio.netlify.app/nyfiko/031/</loc>
-    <lastmod>2026-09-30</lastmod>
-    <image:image>
-      <image:loc>https://milenadargenzio.netlify.app/photos/031/01.jpg</image:loc>
-    </image:image>
-    <image:image>
-      <image:loc>https://milenadargenzio.netlify.app/photos/031/02.jpg</image:loc>
-    </image:image>
-    <image:image>
-      <image:loc>https://milenadargenzio.netlify.app/photos/031/03.jpg</image:loc>
-    </image:image>
-    <image:image>
-      <image:loc>https://milenadargenzio.netlify.app/photos/031/04.jpg</image:loc>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://milenadargenzio.netlify.app/nyfiko/032/</loc>
-    <lastmod>2026-09-30</lastmod>
-    <image:image>
-      <image:loc>https://milenadargenzio.netlify.app/photos/032/01.jpg</image:loc>
-    </image:image>
-    <image:image>
-      <image:loc>https://milenadargenzio.netlify.app/photos/032/02.jpg</image:loc>
-    </image:image>
-  </url>
-  <url>
     <loc>https://milenadargenzio.netlify.app/nyfiko/033/</loc>
-    <lastmod>2026-09-30</lastmod>
+    <lastmod>2026-10-07</lastmod>
     <image:image>
       <image:loc>https://milenadargenzio.netlify.app/photos/033/01.jpg</image:loc>
     </image:image>
